@@ -1,6 +1,7 @@
 package wit.cgd.warbirds.game.objects;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -19,9 +20,12 @@ public class Level extends AbstractGameObject {
 
 	public Player				player	= null;
 	public LevelDecoration		levelDecoration;
+	private Random				randomGenerator;
 	public Array<EnemySimple>	enemies;
 	public float				start;
 	public float				end;
+	
+	private String[] islands = {"islandBig","islandSmall","islandBig","islandSmall","islandTiny"};
 
 	public final Array<Bullet> bullets = new Array<Bullet>();
 
@@ -47,7 +51,7 @@ public class Level extends AbstractGameObject {
 	 * Collection of all objects in level
 	 */
 	public static class LevelMap {
-		ArrayList<LevelObject>	islands;
+		long					islands;
 		ArrayList<LevelObject>	enemies;
 		String					name;
 		float					length;
@@ -73,6 +77,7 @@ public class Level extends AbstractGameObject {
 		String map = Gdx.files.internal("levels/level-01.json").readString();
 
 		Json json = new Json();
+		randomGenerator = new Random();
 		json.setElementType(LevelMap.class, "enemies", LevelObject.class);
 		LevelMap data = new LevelMap();
 		data = json.fromJson(LevelMap.class, map);
@@ -84,6 +89,15 @@ public class Level extends AbstractGameObject {
 			Gdx.app.log(TAG, "type = " + p.name + "\tx = " + p.x + "\ty =" + p.y);
 			levelDecoration.add(p.name, p.x, p.y, p.rotation);
 		}*/
+		Gdx.app.log(TAG, "Islands...");
+		randomGenerator.setSeed(data.islands);
+		for(int i=randomGenerator.nextInt(100)+100; i > 0; --i){
+			if(randomGenerator.nextDouble() < 0.7) continue;
+			float x = (randomGenerator.nextInt(((int)Constants.VIEWPORT_WIDTH*2) + 1) - Constants.VIEWPORT_WIDTH);
+			float y = (randomGenerator.nextInt(((int)Constants.VIEWPORT_HEIGHT*2) + 1) - Constants.VIEWPORT_HEIGHT);
+			levelDecoration.add(islands[randomGenerator.nextInt(5)], x/2, y, randomGenerator.nextInt(91));
+		}
+		
 		Gdx.app.log(TAG, "enemies . . . ");
 		for (Object e : data.enemies) {
 			LevelObject p = (LevelObject) e;
@@ -116,6 +130,11 @@ public class Level extends AbstractGameObject {
 		
 		for (Bullet bullet: bullets)
 			bullet.update(deltaTime);
+		
+		if(randomGenerator.nextDouble() < 0.979) return;
+		float x = (randomGenerator.nextInt(((int)Constants.VIEWPORT_WIDTH*2) + 1) - Constants.VIEWPORT_WIDTH);
+		float y = end;
+		levelDecoration.add(islands[randomGenerator.nextInt(5)], x/2, y, randomGenerator.nextInt(361)-180);
 		
 	}
 
