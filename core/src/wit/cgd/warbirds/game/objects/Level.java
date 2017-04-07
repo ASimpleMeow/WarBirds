@@ -11,7 +11,10 @@ import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonWriter.OutputType;
 import com.badlogic.gdx.utils.Pool;
 
+import wit.cgd.warbirds.game.Assets;
 import wit.cgd.warbirds.game.objects.AbstractGameObject.State;
+import wit.cgd.warbirds.game.objects.enemies.AbstractEnemy;
+import wit.cgd.warbirds.game.objects.enemies.EnemySimple;
 import wit.cgd.warbirds.game.util.Constants;
 
 public class Level extends AbstractGameObject {
@@ -20,15 +23,24 @@ public class Level extends AbstractGameObject {
 
 	public Player				player	= null;
 	public LevelDecoration		levelDecoration;
-	private Random				randomGenerator;
-	public Array<EnemySimple>	enemies;
+	public Random				randomGenerator;
+	public Array<AbstractEnemy>	enemies;
 	public float				start;
 	public float				end;
 	
-	private String[] islands = {"islandBig","islandSmall","islandBig","islandSmall","islandTiny"};
-
+	private String[] islands = {"islandBig","islandSmall","islandTiny"};
+	private float islandTimer;
+	private final float ISLAND_DELAY_TIME = 1f;
+	
 	public final Array<Bullet> bullets = new Array<Bullet>();
 
+	public final Pool<AbstractEnemy> enemyPool = new Pool<AbstractEnemy>(){
+		@Override
+		protected AbstractEnemy newObject(){
+			return new AbstractEnemy(level);
+		}
+	};
+	
 	public final Pool<Bullet> bulletPool = new Pool<Bullet>() {
     	@Override
     	protected Bullet newObject() {
@@ -69,7 +81,7 @@ public class Level extends AbstractGameObject {
 		player = new Player(this);
 		player.position.set(0, 0);
 
-		enemies = new Array<EnemySimple>();
+		enemies = new Array<AbstractEnemy>();
 		
 		levelDecoration = new LevelDecoration(this);
 
@@ -77,7 +89,6 @@ public class Level extends AbstractGameObject {
 		String map = Gdx.files.internal("levels/level-01.json").readString();
 
 		Json json = new Json();
-		randomGenerator = new Random();
 		json.setElementType(LevelMap.class, "enemies", LevelObject.class);
 		LevelMap data = new LevelMap();
 		data = json.fromJson(LevelMap.class, map);
@@ -90,21 +101,23 @@ public class Level extends AbstractGameObject {
 			levelDecoration.add(p.name, p.x, p.y, p.rotation);
 		}*/
 		Gdx.app.log(TAG, "Islands...");
-		randomGenerator.setSeed(data.islands);
+		randomGenerator = new Random(data.islands);
+		/*
 		for(int i=randomGenerator.nextInt(100)+100; i > 0; --i){
 			if(randomGenerator.nextDouble() < 0.7) continue;
 			float x = (randomGenerator.nextInt(((int)Constants.VIEWPORT_WIDTH*2) + 1) - Constants.VIEWPORT_WIDTH);
 			float y = (randomGenerator.nextInt(((int)Constants.VIEWPORT_HEIGHT*2) + 1) - Constants.VIEWPORT_HEIGHT);
 			levelDecoration.add(islands[randomGenerator.nextInt(5)], x/2, y, randomGenerator.nextInt(91));
-		}
+		}*/
 		
 		Gdx.app.log(TAG, "enemies . . . ");
 		for (Object e : data.enemies) {
 			LevelObject p = (LevelObject) e;
 			Gdx.app.log(TAG, "type = " + p.name + "\tx = " + p.x + "\ty =" + p.y);
-			EnemySimple newEnemy = new EnemySimple(this);
+			AbstractEnemy newEnemy = null;
+			if(p.name.equals("enemySimple"))
+				newEnemy = new EnemySimple(this);
 			newEnemy.position.set(p.x,p.y);
-			
 			enemies.add(newEnemy);
 			// TODO add enemies
 		}
@@ -125,17 +138,20 @@ public class Level extends AbstractGameObject {
 
 		player.update(deltaTime);
 		
-		for(EnemySimple enemies : enemies)
+		for(AbstractEnemy enemies : enemies)
 			enemies.update(deltaTime);
 		
 		for (Bullet bullet: bullets)
 			bullet.update(deltaTime);
 		
-		if(randomGenerator.nextDouble() < 0.979) return;
+		islandTimer -= deltaTime;
+		
+		if(randomGenerator.nextDouble() < 0.5) return;
+		if(islandTimer > 0) return;
 		float x = (randomGenerator.nextInt(((int)Constants.VIEWPORT_WIDTH*2) + 1) - Constants.VIEWPORT_WIDTH);
 		float y = end;
-		levelDecoration.add(islands[randomGenerator.nextInt(5)], x/2, y, randomGenerator.nextInt(361)-180);
-		
+		levelDecoration.add(islands[randomGenerator.nextInt(3)], x/2, y, randomGenerator.nextInt(360));
+		islandTimer = ISLAND_DELAY_TIME;
 	}
 
 	public void render(SpriteBatch batch) {
@@ -143,7 +159,7 @@ public class Level extends AbstractGameObject {
 		levelDecoration.render(batch);
 		player.render(batch);
 		
-		for(EnemySimple enemies : enemies)
+		for(AbstractEnemy enemies : enemies)
 			enemies.render(batch);
 		
 		for (Bullet bullet: bullets)

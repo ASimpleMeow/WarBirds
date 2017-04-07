@@ -9,6 +9,7 @@ import com.badlogic.gdx.InputAdapter;
 import wit.cgd.warbirds.game.objects.AbstractGameObject;
 import wit.cgd.warbirds.game.objects.Bullet;
 import wit.cgd.warbirds.game.objects.Level;
+import wit.cgd.warbirds.game.objects.enemies.AbstractEnemy;
 import wit.cgd.warbirds.game.util.CameraHelper;
 import wit.cgd.warbirds.game.util.Constants;
 
@@ -62,6 +63,18 @@ public class WorldController extends InputAdapter {
 		}
 		
 		// TODO cull enemies
+		for(int k=level.enemies.size; --k>=0;){
+			AbstractEnemy it = level.enemies.get(k);
+			if(it.state == AbstractEnemy.State.DEAD){
+				System.out.println("ENEMY DEAD!!!");
+				level.enemies.removeIndex(k);
+				level.enemyPool.free(it);
+			} else if(it.state==AbstractEnemy.State.ACTIVE && !isInScreen(it)){
+				System.out.println("DYING ENEMY!!!");
+				it.state = AbstractEnemy.State.DYING;
+				it.timeToDie = 0f;
+			}
+		}
 	}
 
 	// Collision detection methods

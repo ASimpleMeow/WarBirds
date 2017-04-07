@@ -30,7 +30,7 @@ public class Assets implements Disposable, AssetErrorListener {
 	public AssetMusic			music;
 
 	public AssetPlayer			player;
-	public AssetEnemy			enemySimple;
+	public AssetPlayer			enemySimple;
 	
 	public Asset				bullet;
 	public Asset				doubleBullet;
@@ -67,9 +67,9 @@ public class Assets implements Disposable, AssetErrorListener {
 		fonts = new AssetFonts();
 
 		// create game resource objects
-		player = new AssetPlayer(atlas);
+		player = new AssetPlayer(atlas,"player");
 		
-		enemySimple = new AssetEnemy(atlas,"enemy_plane_green");
+		enemySimple = new AssetPlayer(atlas,"enemy_plane_green");
 		
 		levelDecoration = new AssetLevelDecoration(atlas);
 		bullet = new Asset(atlas, "bullet");
@@ -105,25 +105,13 @@ public class Assets implements Disposable, AssetErrorListener {
 		public final Animation<TextureRegion>		animationNormal;
 		public final Animation<TextureRegion>		animationExplosionBig;
 
-		public AssetPlayer(TextureAtlas atlas) {
-			region = atlas.findRegion("player");
+		public AssetPlayer(TextureAtlas atlas, String name) {
+			region = atlas.findRegion(name);
 
-			Array<AtlasRegion> regions = atlas.findRegions("player");
+			Array<AtlasRegion> regions = atlas.findRegions(name);
 			animationNormal = new Animation<TextureRegion>(1.0f / 15.0f, regions, Animation.PlayMode.LOOP);
 			regions = atlas.findRegions("explosion_big");
 			animationExplosionBig = new Animation<TextureRegion>(1.0f / 15.0f, regions, Animation.PlayMode.LOOP);
-		}
-	}
-	
-	public class AssetEnemy {
-		public final AtlasRegion					region;
-		public final Animation<TextureRegion>		animationNormal;
-		
-		public AssetEnemy(TextureAtlas atlas, String enemyName){
-			region = atlas.findRegion(enemyName);
-			
-			Array<AtlasRegion> regions = atlas.findRegions(enemyName);
-			animationNormal = new Animation<TextureRegion>(1.0f/15.0f,regions,Animation.PlayMode.LOOP);
 		}
 	}
 

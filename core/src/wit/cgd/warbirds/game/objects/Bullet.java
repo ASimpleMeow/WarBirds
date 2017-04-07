@@ -43,6 +43,7 @@ public class Bullet extends AbstractGameObject implements Poolable {
 	@Override
 	public void reset() {
 		System.out.println("sdfsd");
+		velocity.y = Constants.BULLET_SPEED;
 		state = State.ACTIVE;
 	}
 }

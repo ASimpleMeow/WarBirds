@@ -4,6 +4,7 @@ import wit.cgd.warbirds.game.util.Constants;
 
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Pool.Poolable;
 
@@ -22,7 +23,7 @@ public abstract class AbstractGameObject {
 	public Vector2		acceleration;
 
 	public float		stateTime;
-	public Animation	animation;
+	public Animation<TextureRegion>	animation;
 	
 	public float 		timeToDie;
 
@@ -67,7 +68,7 @@ public abstract class AbstractGameObject {
 		}
 	}
 
-	public void setAnimation(Animation animation) {
+	public void setAnimation(Animation<TextureRegion> animation) {
 		this.animation = animation;
 		stateTime = 0;
 	}
