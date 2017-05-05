@@ -69,20 +69,21 @@ public class LevelDecoration extends AbstractGameObject {
 		for (Island island: islands) {
 			region = island.region;
 			if (island.position.y<level.start || island.position.y>level.end) continue;
-			batch.draw(region.getTexture(), 
+			island.render(batch);
+			/*batch.draw(region.getTexture(), 
 					island.position.x-island.origin.x, island.position.y-island.origin.y, 
 					island.origin.x, island.origin.y, 
 					1.1f, 1.1f, 
 					1, 1, island.rotation, 
 					region.getRegionX(), region.getRegionY(),
-					region.getRegionWidth(), region.getRegionHeight(), false, false);
+					region.getRegionWidth(), region.getRegionHeight(), false, false);*/
 		}
 		
 		// islands
 	
 	}
 
-	public void add(String name, float x, float y, float rotation) {
+	public void add(String name, float x, float y, float scaleX, float scaleY, float rotation) {
 		Island island = null;
 		if (name.equals("islandBig")) {
 			island = new Island(level, islandBig);
@@ -95,6 +96,7 @@ public class LevelDecoration extends AbstractGameObject {
 		island.origin.y = island.dimension.y/2; 
 		island.position.set(x,y);
 		island.rotation = rotation;
+		island.scale.set(scaleX, scaleY);
 		islands.add(island);
 	}
 }

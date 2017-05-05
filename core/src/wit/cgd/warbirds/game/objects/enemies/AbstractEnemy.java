@@ -1,6 +1,5 @@
 package wit.cgd.warbirds.game.objects.enemies;
 
-import wit.cgd.warbirds.game.Assets;
 import wit.cgd.warbirds.game.objects.AbstractGameObject;
 import wit.cgd.warbirds.game.objects.Bullet;
 import wit.cgd.warbirds.game.objects.Level;
@@ -8,13 +7,14 @@ import wit.cgd.warbirds.game.objects.Player;
 import wit.cgd.warbirds.game.objects.AbstractGameObject.State;
 import wit.cgd.warbirds.game.util.Constants;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Pool.Poolable;
 
-public class AbstractEnemy extends AbstractGameObject implements Poolable{
+public abstract class AbstractEnemy extends AbstractGameObject implements Poolable{
 
 	public static final String TAG = Player.class.getName();
 	
@@ -23,8 +23,9 @@ public class AbstractEnemy extends AbstractGameObject implements Poolable{
 	protected float timeShootDelay;
 	public String enemyType;
 	
-	public AbstractEnemy (Level level) {
+	public AbstractEnemy (Level level, int health) {
 		super(level);
+		this.health = health;
 	}
 	
 	@Override
@@ -33,19 +34,35 @@ public class AbstractEnemy extends AbstractGameObject implements Poolable{
 		timeShootDelay -= deltaTime;
 	}
 
-	public void shoot() {
-
+	public void shootAt(AbstractGameObject obj) {
 		if (timeShootDelay>0) return;
-		
 		// get bullet
 		Bullet bullet = level.bulletPool.obtain();
 		bullet.reset();
 		bullet.position.set(position);
+		bullet.rotation = rotation;
 		bullet.velocity.y = -Constants.BULLET_SPEED;
-		
+		if(obj != null){
+			if((obj.position.x - position.x < -1)) bullet.velocity.x = -1 * (Constants.BULLET_SPEED/2);
+			else if((obj.position.x - position.x > 1)) bullet.velocity.x = 1 * (Constants.BULLET_SPEED/2);
+			else bullet.velocity.x = 0;
+			if((obj.position.y - position.y < -1)) bullet.velocity.y = -1 * Constants.BULLET_SPEED;
+			else if((obj.position.y - position.y > 1)) bullet.velocity.y = 1 * Constants.BULLET_SPEED/2;
+			else bullet.velocity.y = 0;
+			//bullet.velocity.y = ((obj.position.y - position.y < 0)? -1 : 2) * Constants.BULLET_SPEED;
+		}
 		level.bullets.add(bullet);
-		timeShootDelay = Constants.PLAYER_SHOOT_DELAY;
-
+		timeShootDelay = Constants.ENEMY_SHOOT_DELAY;
+	}
+	
+	public void turnTowards(AbstractGameObject obj){
+		if(obj == null) return;
+		float x = position.x-obj.position.x;
+		float y = position.y-obj.position.y;
+		float rotation = (float)Math.toDegrees(MathUtils.atan2(y, x)) - 90;
+		if(rotation > rotation) rotation -= 0.5f;
+		else if(rotation < rotation) rotation += 0.5f;
+		this.rotation = rotation;
 	}
 	
 	public void render (SpriteBatch batch) {
@@ -60,8 +77,10 @@ public class AbstractEnemy extends AbstractGameObject implements Poolable{
 
 	@Override
 	public void reset() {
-		System.out.println("sdfsd");
+		System.out.println("Enemy Reset");
+		velocity.y = 0;
+		velocity.x = 0;
+		rotation = 0;
 		state = State.ACTIVE;
 	}
-	
 }

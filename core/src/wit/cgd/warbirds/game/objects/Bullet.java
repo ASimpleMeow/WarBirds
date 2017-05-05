@@ -11,11 +11,11 @@ import com.badlogic.gdx.utils.Pool.Poolable;
 
 public class Bullet extends AbstractGameObject implements Poolable {
 
-	public static final String TAG = Player.class.getName();
+	public static final String TAG = Bullet.class.getName();
 	
 	private TextureRegion region;
 	
-	Bullet(Level level) {
+	public Bullet(Level level) {
 		super(level);
 		init();
 	}
@@ -27,7 +27,6 @@ public class Bullet extends AbstractGameObject implements Poolable {
 
 		// Center image on game object
 		origin.set(dimension.x / 2, dimension.y / 2);
-		
 		velocity.y = Constants.BULLET_SPEED;
 	}
 	
@@ -42,8 +41,10 @@ public class Bullet extends AbstractGameObject implements Poolable {
 
 	@Override
 	public void reset() {
-		System.out.println("sdfsd");
+		System.out.println("Bullet Reset");
 		velocity.y = Constants.BULLET_SPEED;
+		velocity.x = 0;
+		rotation = 0;
 		state = State.ACTIVE;
 	}
 }

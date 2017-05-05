@@ -30,6 +30,9 @@ public class Player extends AbstractGameObject {
 		// Center image on game object
 		origin.set(dimension.x / 2, dimension.y / 2);
 		timeShootDelay = 0;
+		
+		health = Constants.PlAYER_HEALTH;
+		
 		state = State.ACTIVE;
 	}
 	

@@ -10,8 +10,10 @@ import wit.cgd.warbirds.game.objects.AbstractGameObject;
 import wit.cgd.warbirds.game.objects.Bullet;
 import wit.cgd.warbirds.game.objects.Level;
 import wit.cgd.warbirds.game.objects.enemies.AbstractEnemy;
+import wit.cgd.warbirds.game.objects.enemies.EnemySimple;
 import wit.cgd.warbirds.game.util.CameraHelper;
 import wit.cgd.warbirds.game.util.Constants;
+import wit.cgd.warbirds.game.util.EnemyPoolCollection;
 
 public class WorldController extends InputAdapter {
 
@@ -28,7 +30,7 @@ public class WorldController extends InputAdapter {
 
 	private void init() {
 		Gdx.input.setInputProcessor(this);
-		level = new Level();
+		level = EnemyPoolCollection.level;//new Level();
 		cameraHelper = new CameraHelper();
 		cameraHelper.setTarget(level);
 	}
@@ -62,15 +64,15 @@ public class WorldController extends InputAdapter {
 			}
 		}
 		
-		// TODO cull enemies
+		// cull enemies
 		for(int k=level.enemies.size; --k>=0;){
 			AbstractEnemy it = level.enemies.get(k);
 			if(it.state == AbstractEnemy.State.DEAD){
-				System.out.println("ENEMY DEAD!!!");
+				System.out.println("-----ENEMY DEAD!!!");
 				level.enemies.removeIndex(k);
-				level.enemyPool.free(it);
+				if(it.enemyType.equals("enemySimple")) level.enemyPools.enemySimplePool.free((EnemySimple) it);
 			} else if(it.state==AbstractEnemy.State.ACTIVE && !isInScreen(it)){
-				System.out.println("DYING ENEMY!!!");
+				System.out.println("-----DYING ENEMY!!!");
 				it.state = AbstractEnemy.State.DYING;
 				it.timeToDie = 0f;
 			}
