@@ -22,8 +22,8 @@ public class Player extends AbstractGameObject {
 	}
 	
 	public void init() {
-		dimension.set(1, 1);
-				
+		dimension.set(1, 1);	
+		
 		animation = Assets.instance.player.animationNormal;
 		setAnimation(animation);
 
@@ -53,7 +53,7 @@ public class Player extends AbstractGameObject {
 		Bullet bullet = level.bulletPool.obtain();
 		bullet.reset();
 		bullet.position.set(position);
-		
+		bullet.isSourcePlayer =true;
 		level.bullets.add(bullet);
 		timeShootDelay = Constants.PLAYER_SHOOT_DELAY;
 

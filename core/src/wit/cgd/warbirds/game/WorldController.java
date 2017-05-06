@@ -5,6 +5,7 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputAdapter;
+import com.badlogic.gdx.math.Rectangle;
 
 import wit.cgd.warbirds.game.objects.AbstractGameObject;
 import wit.cgd.warbirds.game.objects.Bullet;
@@ -22,6 +23,9 @@ public class WorldController extends InputAdapter {
 	private Game				game;
 	public CameraHelper			cameraHelper;
 	public Level				level;
+	
+	private Rectangle			collisionObject1 = new Rectangle();
+	private Rectangle			collisionObject2 = new Rectangle();
 
 	public WorldController(Game game) {
 		this.game = game;
@@ -42,9 +46,7 @@ public class WorldController extends InputAdapter {
 		cameraHelper.update(deltaTime);
 		level.update(deltaTime);
 		cullObjects();
-		checkBulletEnemyCollision();
-		checkEnemyBulletPlayerCollision();
-		checkEnemyPlayerCollision();
+		testCollisions();
 	}
 
 	/**
@@ -80,9 +82,65 @@ public class WorldController extends InputAdapter {
 	}
 
 	// Collision detection methods
-	public void checkBulletEnemyCollision() {}
-	public void checkEnemyBulletPlayerCollision() {}
-	public void checkEnemyPlayerCollision() {}
+	private void testCollisions(){
+		collisionObject1.set(level.player.position.x, level.player.position.y,level.player.dimension.x,
+				level.player.dimension.y);
+		
+		for(Bullet bullet : level.bullets){
+			collisionObject2.set(bullet.position.x, bullet.position.y, bullet.dimension.x,
+					bullet.dimension.y);
+			if (!collisionObject1.overlaps(collisionObject2)) continue;
+			if(bullet.isSourcePlayer) continue;
+			checkBulletPlayerCollision(bullet);
+		}
+		
+		for(AbstractEnemy currentEnemy : level.enemies){
+			collisionObject1.set(currentEnemy.position.x, currentEnemy.position.y, currentEnemy.dimension.x,
+					currentEnemy.dimension.y);
+			
+			for(Bullet bullet : level.bullets){
+				collisionObject2.set(bullet.position.x, bullet.position.y, bullet.dimension.x,
+						bullet.dimension.y);
+				if (!collisionObject1.overlaps(collisionObject2)) continue;
+				if(!bullet.isSourcePlayer) continue;
+				checkBulletEnemyCollision(currentEnemy, bullet);
+			}
+			
+			for(int i = 0; i < level.enemies.size; ++i){
+				if(currentEnemy.equals(level.enemies.get(i))) continue;
+				collisionObject2.set(level.enemies.get(i).position.x, level.enemies.get(i).position.y,
+						level.enemies.get(i).dimension.x, level.enemies.get(i).dimension.y);
+				if(!collisionObject1.overlaps(collisionObject2)) continue;
+				checkEnemyEnemyCollision(currentEnemy, level.enemies.get(i));
+			}
+		}
+		
+		//checkBulletEnemyCollision();
+		//checkEnemyBulletPlayerCollision();
+		//checkEnemyPlayerCollision();
+		//checkEnemyEnemyCollision();
+	}
+	
+	private void checkBulletEnemyCollision(AbstractEnemy enemy, Bullet bullet) {
+		System.out.println("ENEMY HIT BY BULLET!");
+		enemy.state = AbstractGameObject.State.DEAD;
+		bullet.state = AbstractGameObject.State.DEAD;
+	}
+	
+	private void checkEnemyBulletPlayerCollision() {
+		
+	}
+	
+	private void checkBulletPlayerCollision(Bullet bullet) {
+		System.out.println("PLAYER HIT BY BULLET!");
+		bullet.state = AbstractGameObject.State.DEAD;
+	}
+	
+	private void checkEnemyEnemyCollision(AbstractEnemy current, AbstractEnemy other) {
+		boolean hitLeftSide = current.position.x < (other.position.x + other.dimension.x/2);
+		if(hitLeftSide) current.position.x = other.position.x - other.dimension.x;
+		else current.position.x = other.position.x + other.dimension.x;
+	}
 	
 
 	public boolean isInScreen(AbstractGameObject obj) {

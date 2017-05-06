@@ -8,6 +8,7 @@ import com.badlogic.gdx.math.MathUtils;
 import wit.cgd.warbirds.game.Assets;
 import wit.cgd.warbirds.game.objects.Level;
 import wit.cgd.warbirds.game.objects.Player;
+import wit.cgd.warbirds.game.util.Constants;
 import wit.cgd.warbirds.game.objects.AbstractGameObject;
 import wit.cgd.warbirds.game.objects.AbstractGameObject.State;
 
@@ -33,9 +34,10 @@ public class EnemySimple extends AbstractEnemy{
 	
 	public void update(float deltaTime, Player player){
 		super.update(deltaTime);
+		//if (player.position.y > position.y) return;
 		super.turnTowards(player);
+		super.moveTowards(player);
 		super.shootAt(player);
-		velocity.y = -2;
 		//position.x = level.player.position.x;
 		//position.y = level.end - 3;
 		//shoot();
@@ -44,5 +46,6 @@ public class EnemySimple extends AbstractEnemy{
 	@Override
 	public void reset(){
 		super.reset();
+		health = Constants.ENEMY_SIMPLE_HEALTH;
 	}
 }

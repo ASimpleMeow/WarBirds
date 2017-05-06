@@ -45,10 +45,8 @@ public abstract class AbstractEnemy extends AbstractGameObject implements Poolab
 		if(obj != null){
 			if((obj.position.x - position.x < -1)) bullet.velocity.x = -1 * (Constants.BULLET_SPEED/2);
 			else if((obj.position.x - position.x > 1)) bullet.velocity.x = 1 * (Constants.BULLET_SPEED/2);
-			else bullet.velocity.x = 0;
 			if((obj.position.y - position.y < -1)) bullet.velocity.y = -1 * Constants.BULLET_SPEED;
 			else if((obj.position.y - position.y > 1)) bullet.velocity.y = 1 * Constants.BULLET_SPEED/2;
-			else bullet.velocity.y = 0;
 			//bullet.velocity.y = ((obj.position.y - position.y < 0)? -1 : 2) * Constants.BULLET_SPEED;
 		}
 		level.bullets.add(bullet);
@@ -60,9 +58,18 @@ public abstract class AbstractEnemy extends AbstractGameObject implements Poolab
 		float x = position.x-obj.position.x;
 		float y = position.y-obj.position.y;
 		float rotation = (float)Math.toDegrees(MathUtils.atan2(y, x)) - 90;
-		if(rotation > rotation) rotation -= 0.5f;
-		else if(rotation < rotation) rotation += 0.5f;
+		if(this.rotation > rotation && rotation > 0) rotation -= 0.5f;
+		else if(this.rotation < rotation && rotation < 0) rotation += 0.5f;
 		this.rotation = rotation;
+	}
+	
+	public void moveTowards(AbstractGameObject obj){
+		if(obj.position.x-position.x < -1) velocity.x = -0.75f;
+		else if (obj.position.x-position.x > 1) velocity.x = 0.75f;
+		else velocity.x = 0;
+		if(obj.position.y-position.y < -1) velocity.y = -Constants.SCROLL_SPEED;
+		else if (obj.position.y-position.y > 1) velocity.y = 2 * Constants.SCROLL_SPEED;
+		else velocity.y = 0;
 	}
 	
 	public void render (SpriteBatch batch) {
@@ -78,7 +85,7 @@ public abstract class AbstractEnemy extends AbstractGameObject implements Poolab
 	@Override
 	public void reset() {
 		System.out.println("Enemy Reset");
-		velocity.y = 0;
+		velocity.y = -Constants.SCROLL_SPEED;
 		velocity.x = 0;
 		rotation = 0;
 		state = State.ACTIVE;

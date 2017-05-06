@@ -33,7 +33,7 @@ public class Level extends AbstractGameObject {
 	
 	private String[] islands = {"islandBig","islandSmall","islandTiny"};
 	private float islandTimer;
-	private final float ISLAND_DELAY_TIME = 1f;
+	private final float ISLAND_DELAY_TIME = 1.2f;
 	
 	public final Array<Bullet> bullets = new Array<Bullet>();
 	
@@ -121,10 +121,9 @@ public class Level extends AbstractGameObject {
 		end = position.y + scale.y * Constants.VIEWPORT_HEIGHT;
 
 		player.update(deltaTime);
-		
 		while(enemySimpleLimit > 0 && enemies.size < 3){
-			float x = (randomGenerator.nextInt(((int)Constants.VIEWPORT_WIDTH*2) + 1) - Constants.VIEWPORT_WIDTH);
-			float y = player.position.y;
+			float x = randomGenerator.nextInt(((int)Constants.VIEWPORT_WIDTH))*2 - Constants.VIEWPORT_WIDTH;
+			float y = player.position.y + 2;//end;
 			EnemySimple newEnemy = enemyPools.enemySimplePool.obtain();
 			if(newEnemy.level == null) newEnemy.resetLevel(level);
 			newEnemy.reset();
@@ -145,7 +144,7 @@ public class Level extends AbstractGameObject {
 		
 		if(randomGenerator.nextDouble() < 0.5) return;
 		if(islandTimer > 0) return;
-		float x = (randomGenerator.nextInt(((int)Constants.VIEWPORT_WIDTH*2) + 1) - Constants.VIEWPORT_WIDTH);
+		float x = randomGenerator.nextInt(((int)Constants.VIEWPORT_WIDTH))*2 - Constants.VIEWPORT_WIDTH;
 		float y = end;
 		float scaleX = randomGenerator.nextFloat() + 1f;
 		float scaleY = randomGenerator.nextFloat() + 1f;
@@ -163,9 +162,6 @@ public class Level extends AbstractGameObject {
 		
 		for (Bullet bullet: bullets)
 			bullet.render(batch);
-		
-		//System.out.println("Bullets " + bullets.size);
-		System.out.println("LIMIT : "+enemySimpleLimit);
 	}
 
 }

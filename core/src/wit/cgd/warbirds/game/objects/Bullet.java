@@ -13,6 +13,8 @@ public class Bullet extends AbstractGameObject implements Poolable {
 
 	public static final String TAG = Bullet.class.getName();
 	
+	public boolean isSourcePlayer;	
+	
 	private TextureRegion region;
 	
 	public Bullet(Level level) {
@@ -22,7 +24,8 @@ public class Bullet extends AbstractGameObject implements Poolable {
 	
 	public void init() {
 		dimension.set(0.5f, 0.5f);
-				
+		isSourcePlayer = false;
+		
 		region = Assets.instance.doubleBullet.region;
 
 		// Center image on game object
@@ -45,6 +48,7 @@ public class Bullet extends AbstractGameObject implements Poolable {
 		velocity.y = Constants.BULLET_SPEED;
 		velocity.x = 0;
 		rotation = 0;
+		isSourcePlayer = false;
 		state = State.ACTIVE;
 	}
 }
