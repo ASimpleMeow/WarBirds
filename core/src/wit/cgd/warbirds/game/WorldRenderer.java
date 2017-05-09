@@ -93,8 +93,8 @@ public class WorldRenderer implements Disposable {
 	private void renderHealthBar(){
 		shapeRenderer.setProjectionMatrix(cameraGUI.combined);
 		shapeRenderer.begin(ShapeType.Filled);
-		shapeRenderer.setColor((worldController.level.player.health > 4)? Color.GREEN : Color.RED);
-		shapeRenderer.rect(800, 22, (worldController.level.player.health)*40, 25);
+		shapeRenderer.setColor((worldController.level.player.health > 5)? Color.GREEN : Color.RED);
+		shapeRenderer.rect(800, 22, (worldController.level.player.health)*20, 25);
 		shapeRenderer.end();
 	}
 

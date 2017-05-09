@@ -31,6 +31,8 @@ public class Assets implements Disposable, AssetErrorListener {
 
 	public AssetPlayer			player;
 	public AssetPlayer			enemySimple;
+	public AssetPlayer			enemyNormal;
+	public AssetPlayer			enemyDifficult;
 	
 	public Asset				bullet;
 	public Asset				doubleBullet;
@@ -69,7 +71,9 @@ public class Assets implements Disposable, AssetErrorListener {
 		// create game resource objects
 		player = new AssetPlayer(atlas,"player", "explosion_large");
 		
-		enemySimple = new AssetPlayer(atlas,"enemy_plane_green", "explosion_big");
+		enemySimple = new AssetPlayer(atlas, "enemy_plane_green", "explosion_big");
+		enemyNormal = new AssetPlayer(atlas, "enemy_plane_yellow", "explosion_big");
+		enemyDifficult = new AssetPlayer(atlas, "enemy_plane_white", "explosion_big");
 		
 		levelDecoration = new AssetLevelDecoration(atlas);
 		bullet = new Asset(atlas, "bullet");
@@ -101,13 +105,10 @@ public class Assets implements Disposable, AssetErrorListener {
 	}
 
 	public class AssetPlayer {
-		//public final AtlasRegion					region;
 		public final Animation<TextureRegion>		animationNormal;
 		public final Animation<TextureRegion>		animationDeath;
 
 		public AssetPlayer(TextureAtlas atlas, String name, String explosionType) {
-			//region = atlas.findRegion(name);
-
 			Array<AtlasRegion> regions = atlas.findRegions(name);
 			animationNormal = new Animation<TextureRegion>(1.0f / 15.0f, regions, Animation.PlayMode.LOOP);
 			regions = atlas.findRegions(explosionType);

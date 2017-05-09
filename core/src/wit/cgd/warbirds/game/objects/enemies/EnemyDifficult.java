@@ -5,17 +5,17 @@ import wit.cgd.warbirds.game.objects.Level;
 import wit.cgd.warbirds.game.objects.Player;
 import wit.cgd.warbirds.game.util.Constants;
 
-public class EnemySimple extends AbstractEnemy{
+public class EnemyDifficult extends AbstractEnemy{
 	
-	public EnemySimple(Level level) {
+	public EnemyDifficult(Level level) {
 		super(level);
 		init();
 	}
 	
 	public void init() {
 		dimension.set(1, 1);
-		enemyType = "enemySimple";
-		score = 2;
+		enemyType = "enemyDifficult";
+		score = 10;
 
 		// Center image on game object
 		origin.set(dimension.x / 2, dimension.y / 2);
@@ -26,12 +26,13 @@ public class EnemySimple extends AbstractEnemy{
 	public void update(float deltaTime, Player player){
 		super.update(deltaTime);
 		if(health > 0){
-			super.moveTowards(null);
-			super.shootAt(null);
+			super.turnTowards((player.position.y > position.y)? null : player);
+			super.moveTowards((player.position.y > position.y)? null : player);
+			super.shootAt((player.position.y > position.y)? null : player);
 		}else{
 			if(state == State.ACTIVE){
 				state = State.DYING;
-				animation = Assets.instance.enemySimple.animationDeath;
+				animation = Assets.instance.enemyDifficult.animationDeath;
 				setAnimation(animation);
 			}
 		}
@@ -40,8 +41,8 @@ public class EnemySimple extends AbstractEnemy{
 	@Override
 	public void reset(){
 		super.reset();
-		health = Constants.ENEMY_SIMPLE_HEALTH;
-		animation = Assets.instance.enemySimple.animationNormal;
+		health = Constants.ENEMY_DIFFICULT_HEALTH;
+		animation = Assets.instance.enemyDifficult.animationNormal;
 		setAnimation(animation);
 	}
 }

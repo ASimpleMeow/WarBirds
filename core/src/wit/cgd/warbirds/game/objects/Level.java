@@ -15,6 +15,8 @@ import com.badlogic.gdx.utils.Pool;
 import wit.cgd.warbirds.game.Assets;
 import wit.cgd.warbirds.game.objects.AbstractGameObject.State;
 import wit.cgd.warbirds.game.objects.enemies.AbstractEnemy;
+import wit.cgd.warbirds.game.objects.enemies.EnemyDifficult;
+import wit.cgd.warbirds.game.objects.enemies.EnemyNormal;
 import wit.cgd.warbirds.game.objects.enemies.EnemySimple;
 import wit.cgd.warbirds.game.util.Constants;
 import wit.cgd.warbirds.game.util.EnemyPoolCollection;
@@ -29,7 +31,11 @@ public class Level extends AbstractGameObject {
 	public Array<AbstractEnemy>	enemies;
 	public float				start;
 	public float				end;
+	
+	//Enemy spawn limits - the minimum enemies to be killed before ceasing to spawn them per level
 	public int					enemySimpleLimit;
+	public int					enemyNormalLimit;
+	public int					enemyDifficultLimit;
 	
 	private String[] islands = {"islandBig","islandSmall","islandTiny"};
 	private float islandTimer;
@@ -94,18 +100,9 @@ public class Level extends AbstractGameObject {
 			LevelObject p = (LevelObject) e;
 			Gdx.app.log(TAG, "type = " + p.name + "\tlimit = " + p.limit);
 			if(p.name.equals("enemySimple")) enemySimpleLimit = p.limit;
+			else if(p.name.equals("enemyNormal")) enemyNormalLimit = p.limit;
+			else enemyDifficultLimit = p.limit;
 		}
-		/*
-		for (Object e : data.enemies) {
-			LevelObject p = (LevelObject) e;
-			Gdx.app.log(TAG, "type = " + p.name + "\tx = " + p.x + "\ty =" + p.y);
-			AbstractEnemy newEnemy = enemyPool.obtain();
-			if(p.name.equals("enemySimple"))
-				newEnemy = new EnemySimple(this);
-			newEnemy.position.set(p.x,p.y);
-			enemies.add(newEnemy);
-			// TODO add enemies
-		}*/
 
 		position.set(0, 0);
 		velocity.y = Constants.SCROLL_SPEED;
@@ -123,20 +120,37 @@ public class Level extends AbstractGameObject {
 		player.update(deltaTime);
 		System.out.println("Player Score : "+player.score);
 		
-		while(enemySimpleLimit > 0 && enemies.size < 3){
-			float x = randomGenerator.nextInt(((int)Constants.VIEWPORT_WIDTH))*2 - Constants.VIEWPORT_WIDTH;
+		while(enemies.size < 3){
+			float x = randomGenerator.nextInt(((int)Constants.VIEWPORT_WIDTH))*2 - Constants.VIEWPORT_WIDTH - 0.5f;
 			float y = end;
-			EnemySimple newEnemy = enemyPools.enemySimplePool.obtain();
+			AbstractEnemy newEnemy;
+			if(enemyDifficultLimit > 0 && randomGenerator.nextDouble() < 0.1){
+				newEnemy = enemyPools.enemyDifficultPool.obtain();
+				enemyDifficultLimit--;
+			}else if(enemyNormalLimit > 0 && randomGenerator.nextDouble() < 0.4){
+				newEnemy = enemyPools.enemyNormalPool.obtain();
+				enemyNormalLimit--;
+			}else if(enemySimpleLimit > 0){
+				newEnemy = enemyPools.enemySimplePool.obtain();
+				enemySimpleLimit--;
+			}else break;
 			if(newEnemy.level == null) newEnemy.resetLevel(level);
 			newEnemy.reset();
 			newEnemy.position.set(x,y);
 			enemies.add(newEnemy);
-			--enemySimpleLimit;
-			System.out.println("ENEMY ADDED!!! LIMIT : "+enemySimpleLimit+"   SIZE : "+enemies.size);
+			/*
+			AbstractEnemy newEnemy = enemyPools.enemyNormalPool.obtain();
+			if(newEnemy.level == null) newEnemy.resetLevel(level);
+			newEnemy.reset();
+			newEnemy.position.set(x,y);
+			enemies.add(newEnemy);
+			--enemyNormalLimit;*/
 		}
 		
 		for(AbstractEnemy enemy : enemies){
 			if(enemy.enemyType.equals("enemySimple")) ((EnemySimple) enemy).update(deltaTime, player);
+			else if(enemy.enemyType.equals("enemyNormal")) ((EnemyNormal) enemy).update(deltaTime, player);
+			else ((EnemyDifficult) enemy).update(deltaTime, player);
 		}
 		
 		for (Bullet bullet: bullets)

@@ -31,8 +31,10 @@ public class Constants {
 	public static final float	ENEMY_DIE_DELAY		= 0.5f;
 	
 	//Health constants
-	public static final int		PlAYER_HEALTH		= 10;
+	public static final int		PlAYER_HEALTH		= 20;
 	public static final int		ENEMY_SIMPLE_HEALTH	= 4;
+	public static final int		ENEMY_NORMAL_HEALTH	= 6;
+	public static final int		ENEMY_DIFFICULT_HEALTH = 8;
 	
 	public static final int		BULLET_DAMAGE		= 2;
 }

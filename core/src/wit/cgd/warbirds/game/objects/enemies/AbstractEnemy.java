@@ -24,9 +24,8 @@ public abstract class AbstractEnemy extends AbstractGameObject implements Poolab
 	protected float timeShootDelay;
 	public String enemyType;
 	
-	public AbstractEnemy (Level level, int health) {
+	public AbstractEnemy (Level level) {
 		super(level);
-		this.health = health;
 		timeToDie = Constants.ENEMY_DIE_DELAY;
 	}
 	
