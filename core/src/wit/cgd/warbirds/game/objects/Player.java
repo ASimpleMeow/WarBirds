@@ -32,6 +32,7 @@ public class Player extends AbstractGameObject {
 		timeShootDelay = 0;
 		
 		health = Constants.PlAYER_HEALTH;
+		score = 0;
 		
 		state = State.ACTIVE;
 	}

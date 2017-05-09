@@ -8,6 +8,7 @@ import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.math.Rectangle;
 
 import wit.cgd.warbirds.game.objects.AbstractGameObject;
+import wit.cgd.warbirds.game.objects.AbstractGameObject.State;
 import wit.cgd.warbirds.game.objects.Bullet;
 import wit.cgd.warbirds.game.objects.Level;
 import wit.cgd.warbirds.game.objects.enemies.AbstractEnemy;
@@ -70,11 +71,10 @@ public class WorldController extends InputAdapter {
 		for(int k=level.enemies.size; --k>=0;){
 			AbstractEnemy it = level.enemies.get(k);
 			if(it.state == AbstractEnemy.State.DEAD){
-				System.out.println("-----ENEMY DEAD!!!");
 				level.enemies.removeIndex(k);
+				level.player.score += it.score;
 				if(it.enemyType.equals("enemySimple")) level.enemyPools.enemySimplePool.free((EnemySimple) it);
 			} else if(it.state==AbstractEnemy.State.ACTIVE && !isInScreen(it)){
-				System.out.println("-----DYING ENEMY!!!");
 				it.state = AbstractEnemy.State.DYING;
 				it.timeToDie = 0f;
 			}
@@ -114,25 +114,17 @@ public class WorldController extends InputAdapter {
 				checkEnemyEnemyCollision(currentEnemy, level.enemies.get(i));
 			}
 		}
-		
-		//checkBulletEnemyCollision();
-		//checkEnemyBulletPlayerCollision();
-		//checkEnemyPlayerCollision();
-		//checkEnemyEnemyCollision();
 	}
 	
 	private void checkBulletEnemyCollision(AbstractEnemy enemy, Bullet bullet) {
 		System.out.println("ENEMY HIT BY BULLET!");
-		enemy.state = AbstractGameObject.State.DEAD;
-		bullet.state = AbstractGameObject.State.DEAD;
-	}
-	
-	private void checkEnemyBulletPlayerCollision() {
-		
+		enemy.health -= Constants.BULLET_DAMAGE;
+		bullet.state = AbstractGameObject.State.DYING;
 	}
 	
 	private void checkBulletPlayerCollision(Bullet bullet) {
 		System.out.println("PLAYER HIT BY BULLET!");
+		if(level.player.health > 0) level.player.health--;
 		bullet.state = AbstractGameObject.State.DEAD;
 	}
 	

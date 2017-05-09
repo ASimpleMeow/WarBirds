@@ -83,7 +83,7 @@ public class LevelDecoration extends AbstractGameObject {
 	
 	}
 
-	public void add(String name, float x, float y, float scaleX, float scaleY, float rotation) {
+	public void add(String name, float x, float y, float scale, float rotation) {
 		Island island = null;
 		if (name.equals("islandBig")) {
 			island = new Island(level, islandBig);
@@ -96,7 +96,7 @@ public class LevelDecoration extends AbstractGameObject {
 		island.origin.y = island.dimension.y/2; 
 		island.position.set(x,y);
 		island.rotation = rotation;
-		island.scale.set(scaleX, scaleY);
+		island.scale.set(scale, scale);
 		islands.add(island);
 	}
 }

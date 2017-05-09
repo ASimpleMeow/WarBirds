@@ -1,7 +1,11 @@
 package wit.cgd.warbirds.game;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Disposable;
 import wit.cgd.warbirds.game.util.Constants;
 
@@ -14,6 +18,8 @@ public class WorldRenderer implements Disposable {
 	
 	private SpriteBatch			batch;
 	private WorldController		worldController;
+	
+	private ShapeRenderer		shapeRenderer;
 
 	public WorldRenderer(WorldController worldController) {
 		this.worldController = worldController;
@@ -29,6 +35,8 @@ public class WorldRenderer implements Disposable {
 		cameraGUI.position.set(0, 0, 0);
 		cameraGUI.setToOrtho(true); // flip y-axis
 		cameraGUI.update();
+		
+		shapeRenderer = new ShapeRenderer();
 	}
 
 	public void resize(int width, int height) {
@@ -55,11 +63,39 @@ public class WorldRenderer implements Disposable {
 		batch.end();
 		
 		// GUI + HUD rendering 
+		renderGui(batch);
+	}
+	
+	private void renderGui(SpriteBatch batch){
+		
+		renderHealthBar();
 		
 		batch.setProjectionMatrix(cameraGUI.combined);
 		batch.begin();
-			// TODO
+		
+		//Render player score at the top left corner
+		renderGuiScore(batch);
+		
+		//Render health text in the top right corner
+		renderGuiHealth(batch);
+		
 		batch.end();
+	}
+	
+	private void renderGuiScore(SpriteBatch batch) {
+        Assets.instance.fonts.defaultBig.draw(batch, "" + worldController.level.player.score, 60, 22);
+    }
+	
+	private void renderGuiHealth(SpriteBatch batch){
+		Assets.instance.fonts.defaultNormal.draw(batch, "Health", 800, 22);
+	}
+	
+	private void renderHealthBar(){
+		shapeRenderer.setProjectionMatrix(cameraGUI.combined);
+		shapeRenderer.begin(ShapeType.Filled);
+		shapeRenderer.setColor((worldController.level.player.health > 4)? Color.GREEN : Color.RED);
+		shapeRenderer.rect(800, 22, (worldController.level.player.health)*40, 25);
+		shapeRenderer.end();
 	}
 
 	@Override

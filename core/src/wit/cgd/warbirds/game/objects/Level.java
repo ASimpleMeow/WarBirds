@@ -121,9 +121,11 @@ public class Level extends AbstractGameObject {
 		end = position.y + scale.y * Constants.VIEWPORT_HEIGHT;
 
 		player.update(deltaTime);
+		System.out.println("Player Score : "+player.score);
+		
 		while(enemySimpleLimit > 0 && enemies.size < 3){
 			float x = randomGenerator.nextInt(((int)Constants.VIEWPORT_WIDTH))*2 - Constants.VIEWPORT_WIDTH;
-			float y = player.position.y + 2;//end;
+			float y = end;
 			EnemySimple newEnemy = enemyPools.enemySimplePool.obtain();
 			if(newEnemy.level == null) newEnemy.resetLevel(level);
 			newEnemy.reset();
@@ -146,9 +148,8 @@ public class Level extends AbstractGameObject {
 		if(islandTimer > 0) return;
 		float x = randomGenerator.nextInt(((int)Constants.VIEWPORT_WIDTH))*2 - Constants.VIEWPORT_WIDTH;
 		float y = end;
-		float scaleX = randomGenerator.nextFloat() + 1f;
-		float scaleY = randomGenerator.nextFloat() + 1f;
-		levelDecoration.add(islands[randomGenerator.nextInt(3)], x/2, y, scaleX, scaleY, randomGenerator.nextInt(360));
+		float scale = randomGenerator.nextFloat() + 0.5f;
+		levelDecoration.add(islands[randomGenerator.nextInt(3)], x/2, y, scale, randomGenerator.nextInt(360));
 		islandTimer = ISLAND_DELAY_TIME;
 	}
 

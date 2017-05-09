@@ -1,5 +1,6 @@
 package wit.cgd.warbirds.game.objects.enemies;
 
+import wit.cgd.warbirds.game.Assets;
 import wit.cgd.warbirds.game.objects.AbstractGameObject;
 import wit.cgd.warbirds.game.objects.Bullet;
 import wit.cgd.warbirds.game.objects.Level;
@@ -26,12 +27,13 @@ public abstract class AbstractEnemy extends AbstractGameObject implements Poolab
 	public AbstractEnemy (Level level, int health) {
 		super(level);
 		this.health = health;
+		timeToDie = Constants.ENEMY_DIE_DELAY;
 	}
 	
 	@Override
 	public void update (float deltaTime) {
 		super.update(deltaTime);
-		timeShootDelay -= deltaTime;
+		timeShootDelay -= deltaTime;		
 	}
 
 	public void shootAt(AbstractGameObject obj) {
@@ -41,29 +43,27 @@ public abstract class AbstractEnemy extends AbstractGameObject implements Poolab
 		bullet.reset();
 		bullet.position.set(position);
 		bullet.rotation = rotation;
-		bullet.velocity.y = -Constants.BULLET_SPEED;
-		if(obj != null){
-			if((obj.position.x - position.x < -1)) bullet.velocity.x = -1 * (Constants.BULLET_SPEED/2);
-			else if((obj.position.x - position.x > 1)) bullet.velocity.x = 1 * (Constants.BULLET_SPEED/2);
-			if((obj.position.y - position.y < -1)) bullet.velocity.y = -1 * Constants.BULLET_SPEED;
-			else if((obj.position.y - position.y > 1)) bullet.velocity.y = 1 * Constants.BULLET_SPEED/2;
-			//bullet.velocity.y = ((obj.position.y - position.y < 0)? -1 : 2) * Constants.BULLET_SPEED;
-		}
+		bullet.velocity.y = -Constants.BULLET_SPEED/2;
+		if(obj != null) bullet.velocity.rotate(rotation);
 		level.bullets.add(bullet);
 		timeShootDelay = Constants.ENEMY_SHOOT_DELAY;
 	}
 	
 	public void turnTowards(AbstractGameObject obj){
-		if(obj == null) return;
-		float x = position.x-obj.position.x;
-		float y = position.y-obj.position.y;
-		float rotation = (float)Math.toDegrees(MathUtils.atan2(y, x)) - 90;
-		if(this.rotation > rotation && rotation > 0) rotation -= 0.5f;
-		else if(this.rotation < rotation && rotation < 0) rotation += 0.5f;
-		this.rotation = rotation;
+		if(obj == null){
+			if(rotation > 0) rotation -= 2;
+			else if (rotation < 0) rotation += 2;
+			return;
+		}
+		float angle = (float) Math.atan2(obj.position.y - this.position.y, obj.position.x - this.position.x);
+	    angle = (float) (angle * (180 / Math.PI));
+	    rotation = angle + 90;
 	}
 	
 	public void moveTowards(AbstractGameObject obj){
+		velocity.y = -Constants.SCROLL_SPEED;
+		velocity.x = 0;
+		if(obj == null) return;
 		if(obj.position.x-position.x < -1) velocity.x = -0.75f;
 		else if (obj.position.x-position.x > 1) velocity.x = 0.75f;
 		else velocity.x = 0;
@@ -89,5 +89,6 @@ public abstract class AbstractEnemy extends AbstractGameObject implements Poolab
 		velocity.x = 0;
 		rotation = 0;
 		state = State.ACTIVE;
+		timeToDie = Constants.ENEMY_DIE_DELAY;
 	}
 }

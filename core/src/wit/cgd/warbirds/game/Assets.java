@@ -67,9 +67,9 @@ public class Assets implements Disposable, AssetErrorListener {
 		fonts = new AssetFonts();
 
 		// create game resource objects
-		player = new AssetPlayer(atlas,"player");
+		player = new AssetPlayer(atlas,"player", "explosion_large");
 		
-		enemySimple = new AssetPlayer(atlas,"enemy_plane_green");
+		enemySimple = new AssetPlayer(atlas,"enemy_plane_green", "explosion_big");
 		
 		levelDecoration = new AssetLevelDecoration(atlas);
 		bullet = new Asset(atlas, "bullet");
@@ -101,17 +101,17 @@ public class Assets implements Disposable, AssetErrorListener {
 	}
 
 	public class AssetPlayer {
-		public final AtlasRegion					region;
+		//public final AtlasRegion					region;
 		public final Animation<TextureRegion>		animationNormal;
-		public final Animation<TextureRegion>		animationExplosionBig;
+		public final Animation<TextureRegion>		animationDeath;
 
-		public AssetPlayer(TextureAtlas atlas, String name) {
-			region = atlas.findRegion(name);
+		public AssetPlayer(TextureAtlas atlas, String name, String explosionType) {
+			//region = atlas.findRegion(name);
 
 			Array<AtlasRegion> regions = atlas.findRegions(name);
 			animationNormal = new Animation<TextureRegion>(1.0f / 15.0f, regions, Animation.PlayMode.LOOP);
-			regions = atlas.findRegions("explosion_big");
-			animationExplosionBig = new Animation<TextureRegion>(1.0f / 15.0f, regions, Animation.PlayMode.LOOP);
+			regions = atlas.findRegions(explosionType);
+			animationDeath = new Animation<TextureRegion>(1.0f / 15.0f, regions, Animation.PlayMode.LOOP);
 		}
 	}
 
@@ -142,7 +142,7 @@ public class Assets implements Disposable, AssetErrorListener {
 			defaultBig = new BitmapFont(Gdx.files.internal("images/arial-15.fnt"), true);
 			// set font sizes
 			defaultSmall.getData().setScale(0.75f);
-			defaultNormal.getData().setScale(1.0f);
+			defaultNormal.getData().setScale(2.5f, 2.0f);
 			defaultBig.getData().setScale(4.0f);
 			// enable linear texture filtering for smooth fonts
 			defaultSmall.getRegion().getTexture().setFilter(TextureFilter.Linear, TextureFilter.Linear);

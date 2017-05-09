@@ -24,6 +24,7 @@ public abstract class AbstractGameObject {
 	public Vector2		acceleration;
 	
 	public int			health;
+	public int 			score;
 
 	public float		stateTime;
 	public Animation<TextureRegion>	animation;
