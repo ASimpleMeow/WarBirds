@@ -3,6 +3,7 @@ package wit.cgd.warbirds.game;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Rectangle;
@@ -79,22 +80,31 @@ public class WorldRenderer implements Disposable {
 		//Render health text in the top right corner
 		renderGuiHealth(batch);
 		
+		//Render level number in the bottom left corner
+		renderGuiLevelNumber(batch);
+		
 		batch.end();
 	}
 	
 	private void renderGuiScore(SpriteBatch batch) {
-        Assets.instance.fonts.defaultBig.draw(batch, "" + worldController.level.player.score, 60, 22);
+        Assets.instance.fonts.defaultBig.draw(batch, "" + worldController.level.player.score, cameraGUI.viewportWidth-100, 22);
     }
 	
 	private void renderGuiHealth(SpriteBatch batch){
-		Assets.instance.fonts.defaultNormal.draw(batch, "Health", 800, 22);
+		Assets.instance.fonts.defaultNormal.draw(batch, "Health", 50, 22);
+	}
+	
+	private void renderGuiLevelNumber(SpriteBatch batch){
+		TextureRegion region = Assets.instance.levelNumber.get(worldController.level.levelNumber-1).region;
+		batch.draw(region.getTexture(), 25, cameraGUI.viewportHeight-100, 200, 100, region.getRegionX(), region.getRegionY(),
+				region.getRegionWidth(), region.getRegionHeight(), false, true);
 	}
 	
 	private void renderHealthBar(){
 		shapeRenderer.setProjectionMatrix(cameraGUI.combined);
 		shapeRenderer.begin(ShapeType.Filled);
 		shapeRenderer.setColor((worldController.level.player.health > 5)? Color.GREEN : Color.RED);
-		shapeRenderer.rect(800, 22, (worldController.level.player.health)*20, 25);
+		shapeRenderer.rect(50, 22, (worldController.level.player.health)*20, 25);
 		shapeRenderer.end();
 	}
 

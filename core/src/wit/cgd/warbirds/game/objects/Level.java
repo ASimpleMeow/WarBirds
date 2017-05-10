@@ -67,18 +67,10 @@ public class Level extends AbstractGameObject {
 	public static class LevelMap {
 		long					seed;
 		ArrayList<LevelObject>	enemies;
-		String					name;
-		float					length;
 	}
 
 	public Level() {
 		super(null);
-		init();
-	}
-	
-	public Level(int levelNumber) {
-		super(null);
-		this.levelNumber = levelNumber;
 		init();
 	}
 
@@ -88,9 +80,16 @@ public class Level extends AbstractGameObject {
 		player.position.set(0, 0);
 
 		enemies = new Array<AbstractEnemy>();
-		
+						
 		levelDecoration = new LevelDecoration(this);
-
+		
+		position.set(0, 0);
+		velocity.y = Constants.SCROLL_SPEED;
+		state = State.ACTIVE;
+	}
+	
+	public void loadLevel(int levelNumber){
+		this.levelNumber = levelNumber;
 		// read and parse level map (form a json file)
 		String map = Gdx.files.internal(String.format("levels/level-%d.json",levelNumber)).readString();
 
@@ -100,7 +99,7 @@ public class Level extends AbstractGameObject {
 		data = json.fromJson(LevelMap.class, map);
 		Gdx.app.log(TAG, "Level Seed...");
 		randomGenerator = new Random(data.seed);
-		
+				
 		Gdx.app.log(TAG, "Enemies . . . ");
 		for(Object e : data.enemies){
 			LevelObject p = (LevelObject) e;
@@ -109,10 +108,6 @@ public class Level extends AbstractGameObject {
 			else if(p.name.equals("enemyNormal")) enemyNormalLimit = p.limit;
 			else enemyDifficultLimit = p.limit;
 		}
-
-		position.set(0, 0);
-		velocity.y = Constants.SCROLL_SPEED;
-		state = State.ACTIVE;
 	}
 
 	public void update(float deltaTime) {

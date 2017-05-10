@@ -13,11 +13,13 @@ public class GameScreen extends AbstractGameScreen {
 
 	private WorldController		worldController;
 	private WorldRenderer		worldRenderer;
+	private int					levelNumber;
 
 	private boolean				paused;
 
-	public GameScreen(Game game) {
+	public GameScreen(Game game, int levelNumber) {
 		super(game);
+		this.levelNumber = levelNumber;
 	}
 
 	@Override
@@ -42,6 +44,7 @@ public class GameScreen extends AbstractGameScreen {
 	@Override
 	public void show() {
 		worldController = new WorldController(game);
+		worldController.level.loadLevel(levelNumber);
 		worldRenderer = new WorldRenderer(worldController);
 		Gdx.input.setCatchBackKey(true);
 	}

@@ -26,6 +26,7 @@ public class WorldController extends InputAdapter {
 	private Game				game;
 	public CameraHelper			cameraHelper;
 	public Level				level;
+	public int					levelNumber;
 	
 	private Rectangle			collisionObject1 = new Rectangle();
 	private Rectangle			collisionObject2 = new Rectangle();

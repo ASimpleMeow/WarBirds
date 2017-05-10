@@ -37,6 +37,7 @@ public class Assets implements Disposable, AssetErrorListener {
 	public Asset				bullet;
 	public Asset				doubleBullet;
 	public AssetLevelDecoration	levelDecoration;
+	public Array<Asset>			levelNumber;
 
 	private Assets() {}
 
@@ -78,6 +79,8 @@ public class Assets implements Disposable, AssetErrorListener {
 		levelDecoration = new AssetLevelDecoration(atlas);
 		bullet = new Asset(atlas, "bullet");
 		doubleBullet  = new Asset(atlas, "bullet_double");
+		levelNumber = new Array<Asset>();
+		for(int i = 1; i < 9; ++i) levelNumber.add(new Asset(atlas, String.format("wave%d", i)));
 		
 		// create sound and music resource objects
 		sounds = new AssetSounds(assetManager);
@@ -113,6 +116,7 @@ public class Assets implements Disposable, AssetErrorListener {
 			animationNormal = new Animation<TextureRegion>(1.0f / 15.0f, regions, Animation.PlayMode.LOOP);
 			regions = atlas.findRegions(explosionType);
 			animationDeath = new Animation<TextureRegion>(1.0f / 15.0f, regions, Animation.PlayMode.LOOP);
+			Gdx.app.log(TAG, "Loaded asset animation '" + name + "'");
 		}
 	}
 

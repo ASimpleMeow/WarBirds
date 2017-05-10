@@ -480,59 +480,59 @@ water
   orig: 32, 32
   offset: 0, 0
   index: -1
-wave
+wave1
   rotate: false
   xy: 2, 180
   size: 128, 64
   orig: 128, 64
   offset: 0, 0
-  index: 1
-wave
+  index: -1
+wave2
   rotate: false
   xy: 2, 114
   size: 128, 64
   orig: 128, 64
   offset: 0, 0
-  index: 2
-wave
+  index: -1
+wave3
   rotate: false
   xy: 132, 180
   size: 128, 64
   orig: 128, 64
   offset: 0, 0
-  index: 3
-wave
+  index: -1
+wave4
   rotate: false
   xy: 2, 48
   size: 128, 64
   orig: 128, 64
   offset: 0, 0
-  index: 4
-wave
+  index: -1
+wave5
   rotate: false
   xy: 132, 114
   size: 128, 64
   orig: 128, 64
   offset: 0, 0
-  index: 5
-wave
+  index: -1
+wave6
   rotate: false
   xy: 262, 180
   size: 128, 64
   orig: 128, 64
   offset: 0, 0
-  index: 6
-wave
+  index: -1
+wave7
   rotate: false
   xy: 132, 48
   size: 128, 64
   orig: 128, 64
   offset: 0, 0
-  index: 7
-wave
+  index: -1
+wave8
   rotate: false
   xy: 262, 114
   size: 128, 64
   orig: 128, 64
   offset: 0, 0
-  index: 8
+  index: -1

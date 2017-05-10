@@ -11,7 +11,10 @@
     },
     com.badlogic.gdx.scenes.scene2d.ui.Button$ButtonStyle: {
         start: { down: start-dn, up: start-up },
-        options: { down: options-dn, up: options-up }
+        continue: { down: continue-dn, up: continue-up },
+        options: { down: options-dn, up: options-up },
+        ok: { down: ok-dn, up: ok-up },
+        cancel: { down: cancel-dn, up: cancel-up }
     },
     com.badlogic.gdx.scenes.scene2d.ui.Image: {
         background: { drawable: background },
