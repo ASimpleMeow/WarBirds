@@ -11,6 +11,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import wit.cgd.warbirds.game.Assets;
 import wit.cgd.warbirds.game.screens.GameScreen;
+import wit.cgd.warbirds.game.screens.MenuScreen;
 import wit.cgd.warbirds.game.util.GamePreferences;
 
 public class WarBirds extends Game {
@@ -31,7 +32,8 @@ public class WarBirds extends Game {
 		// AudioManager.instance.play(Assets.instance.music.song01);
 
 		// TODO Start game at menu screen
-		setScreen(new GameScreen(this));
+		setScreen(new MenuScreen(this));
+		//setScreen(new GameScreen(this));
 
 	}
 

@@ -12,6 +12,14 @@ public class Constants {
 
 	// atlas for all game sprites
 	public static final String	TEXTURE_ATLAS_GAME	= "images/game.atlas";
+	
+	// location of game specific skin and atlas
+    public static final String  SKIN_UI                 = "images/ui.json";
+    public static final String  TEXTURE_ATLAS_UI        = "images/ui.atlas";
+
+    // location of libgdx default skin and atlas
+    public static final String  SKIN_LIBGDX_UI          = "images/uiskin.json";
+    public static final String  TEXTURE_ATLAS_LIBGDX_UI = "images/uiskin.atlas";
 
 	// Persistent storage files
 	public static final String	PREFERENCES			= "game.prefs";

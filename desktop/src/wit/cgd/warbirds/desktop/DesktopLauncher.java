@@ -19,6 +19,7 @@ public class DesktopLauncher {
 			settings.maxHeight = 1024;
 			settings.debug = drawDebugOutline;
 			TexturePacker.process(settings, "assets-raw/images", "../android/assets/images", "game.atlas");
+			TexturePacker.process(settings, "assets-raw/images-ui", "../android/assets/images", "ui.atlas");
 		}
 		
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();

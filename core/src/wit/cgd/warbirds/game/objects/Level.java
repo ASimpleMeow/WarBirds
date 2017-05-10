@@ -31,6 +31,7 @@ public class Level extends AbstractGameObject {
 	public Array<AbstractEnemy>	enemies;
 	public float				start;
 	public float				end;
+	public int 					levelNumber = 1;
 	
 	//Enemy spawn limits - the minimum enemies to be killed before ceasing to spawn them per level
 	public int					enemySimpleLimit;
@@ -73,7 +74,12 @@ public class Level extends AbstractGameObject {
 	public Level() {
 		super(null);
 		init();
-
+	}
+	
+	public Level(int levelNumber) {
+		super(null);
+		this.levelNumber = levelNumber;
+		init();
 	}
 
 	private void init() {
@@ -86,7 +92,7 @@ public class Level extends AbstractGameObject {
 		levelDecoration = new LevelDecoration(this);
 
 		// read and parse level map (form a json file)
-		String map = Gdx.files.internal("levels/level-01.json").readString();
+		String map = Gdx.files.internal(String.format("levels/level-%d.json",levelNumber)).readString();
 
 		Json json = new Json();
 		json.setElementType(LevelMap.class, "enemies", LevelObject.class);
