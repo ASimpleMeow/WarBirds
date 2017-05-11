@@ -68,8 +68,13 @@ public class WorldRenderer implements Disposable {
 	}
 	
 	private void renderGui(SpriteBatch batch){
-		
+
+		//Render green (red when low) health bar
 		renderHealthBar();
+		
+		//Render player's shield bar
+		renderShieldBar();
+		
 		
 		batch.setProjectionMatrix(cameraGUI.combined);
 		batch.begin();
@@ -79,6 +84,9 @@ public class WorldRenderer implements Disposable {
 		
 		//Render health text in the top right corner
 		renderGuiHealth(batch);
+		
+		//If player has a shield, render shield text
+		if(worldController.level.player.shield > 0) renderGuiShield(batch);
 		
 		//Render level number in the bottom left corner
 		renderGuiLevelNumber(batch);
@@ -94,8 +102,12 @@ public class WorldRenderer implements Disposable {
 		Assets.instance.fonts.defaultNormal.draw(batch, "Health", 50, 22);
 	}
 	
+	private void renderGuiShield(SpriteBatch batch){
+		Assets.instance.fonts.defaultNormal.draw(batch, "Shield", 50, 60);
+	}
+	
 	private void renderGuiLevelNumber(SpriteBatch batch){
-		TextureRegion region = Assets.instance.levelNumber.get(worldController.level.levelNumber-1).region;
+		TextureRegion region = Assets.instance.levelNumbers.regions.get(worldController.level.levelNumber-1);
 		batch.draw(region.getTexture(), 25, cameraGUI.viewportHeight-100, 200, 100, region.getRegionX(), region.getRegionY(),
 				region.getRegionWidth(), region.getRegionHeight(), false, true);
 	}
@@ -105,6 +117,14 @@ public class WorldRenderer implements Disposable {
 		shapeRenderer.begin(ShapeType.Filled);
 		shapeRenderer.setColor((worldController.level.player.health > 5)? Color.GREEN : Color.RED);
 		shapeRenderer.rect(50, 22, (worldController.level.player.health)*20, 25);
+		shapeRenderer.end();
+	}
+	
+	private void renderShieldBar(){
+		shapeRenderer.setProjectionMatrix(cameraGUI.combined);
+		shapeRenderer.begin(ShapeType.Filled);
+		shapeRenderer.setColor(Color.CYAN);
+		shapeRenderer.rect(50, 60, (worldController.level.player.shield)*20, 25);
 		shapeRenderer.end();
 	}
 

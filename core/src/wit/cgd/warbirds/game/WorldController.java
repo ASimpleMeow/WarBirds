@@ -154,10 +154,8 @@ public class WorldController extends InputAdapter {
 	}
 	
 	private void checkBulletPlayerCollision(Bullet bullet) {
-		if(level.player.health > 0){
-			if(level.player.shield > 0) level.player.shield -= Constants.BULLET_DAMAGE;
-			else level.player.health -= Constants.BULLET_DAMAGE;
-		}
+		if(level.player.shield > 0) level.player.shield -= Constants.BULLET_DAMAGE;
+		else level.player.health -= Constants.BULLET_DAMAGE;
 		bullet.state = AbstractGameObject.State.DEAD;
 	}
 	

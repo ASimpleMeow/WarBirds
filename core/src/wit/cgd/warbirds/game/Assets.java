@@ -37,10 +37,11 @@ public class Assets implements Disposable, AssetErrorListener {
 	
 	public Asset				bullet;
 	public Asset				doubleBullet;
+	public Asset				enemyBullet;
 	public AssetLevelDecoration	levelDecoration;
 	public Asset				shield;
-	public Array<Asset>			levelNumber;
-	public Array<Asset>			powerups;
+	public Asset				levelNumbers;
+	public Asset				powerups;
 
 	private Assets() {}
 
@@ -88,14 +89,9 @@ public class Assets implements Disposable, AssetErrorListener {
 		shield = new Asset(atlas, "shield");
 		bullet = new Asset(atlas, "bullet");
 		doubleBullet  = new Asset(atlas, "bullet_double");
-		levelNumber = new Array<Asset>();
-		for(int i = 1; i < 9; ++i) levelNumber.add(new Asset(atlas, String.format("wave%d", i)));
-		
-		powerups = new Array<Asset>();
-		powerups.add(new Asset(atlas, "powerup_icon"));
-		powerups.add(new Asset(atlas, "double_bullets_icon"));
-		powerups.add(new Asset(atlas, "health_icon"));
-		powerups.add(new Asset(atlas, "shield_icon"));
+		enemyBullet = new Asset(atlas, "emeny_bullet");
+		levelNumbers = new Asset(atlas, "wave1","wave2","wave3","wave4","wave5","wave6","wave7","wave8");
+		powerups = new Asset(atlas, "powerup_icon", "double_bullets_icon", "health_icon", "shield_icon");
 		
 		// create sound and music resource objects
 		sounds = new AssetSounds(assetManager);
@@ -114,11 +110,22 @@ public class Assets implements Disposable, AssetErrorListener {
 	}
 
 	public class Asset {
-		public final AtlasRegion	region;
+		public final AtlasRegion		region;
+		public final Array<AtlasRegion>	regions;
 
 		public Asset(TextureAtlas atlas, String imageName) {
 			region = atlas.findRegion(imageName);
+			regions = null;
 			Gdx.app.log(TAG, "Loaded asset '" + imageName + "'");
+		}
+		
+		public Asset(TextureAtlas atlas, String...imageNames) {
+			region = null;
+			regions = new Array<AtlasRegion>();
+			for(String imageName : imageNames){
+				regions.add(atlas.findRegion(imageName));
+				Gdx.app.log(TAG, "Loaded asset '" + imageName + "'");
+			}
 		}
 	}
 

@@ -21,7 +21,7 @@ public class AbstractPowerup extends AbstractGameObject implements Poolable{
 		dimension.set(0.5f, 0.5f);
 		powerType = 0;
 		
-		region = Assets.instance.powerups.get(powerType).region;
+		region = Assets.instance.powerups.regions.get(powerType);
 
 		// Center image on game object
 		origin.set(dimension.x / 2, dimension.y / 2);
@@ -37,7 +37,7 @@ public class AbstractPowerup extends AbstractGameObject implements Poolable{
 	
 	public void setPower(int powerType){
 		this.powerType = powerType;
-		region = Assets.instance.powerups.get(powerType).region;
+		region = Assets.instance.powerups.regions.get(powerType);
 	}
 	
 	public void executePowerup(Player player){
@@ -64,7 +64,7 @@ public class AbstractPowerup extends AbstractGameObject implements Poolable{
 	public void reset() {
 		powerType = 0;
 		position.set(0, 0);
-		region = Assets.instance.powerups.get(powerType).region;
+		region = Assets.instance.powerups.regions.get(powerType);
 		state = State.ACTIVE;
 	}
 }

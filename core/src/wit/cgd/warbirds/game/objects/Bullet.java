@@ -33,6 +33,9 @@ public class Bullet extends AbstractGameObject implements Poolable {
 		velocity.y = Constants.BULLET_SPEED;
 	}
 	
+	public void setRegion(TextureRegion region){
+		this.region = region;
+	}
 
 	@Override
 	public void render(SpriteBatch batch) {
@@ -46,6 +49,7 @@ public class Bullet extends AbstractGameObject implements Poolable {
 	public void reset() {
 		System.out.println("Bullet Reset");
 		velocity.y = Constants.BULLET_SPEED;
+		region = Assets.instance.doubleBullet.region;
 		velocity.x = 0;
 		rotation = 0;
 		isSourcePlayer = false;

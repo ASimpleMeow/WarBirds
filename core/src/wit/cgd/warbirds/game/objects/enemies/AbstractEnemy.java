@@ -43,6 +43,7 @@ public abstract class AbstractEnemy extends AbstractGameObject implements Poolab
 		bullet.position.set(position);
 		bullet.rotation = rotation;
 		bullet.velocity.y = -Constants.BULLET_SPEED/2;
+		bullet.setRegion(Assets.instance.enemyBullet.region);
 		if(obj != null) bullet.velocity.rotate(rotation);
 		level.bullets.add(bullet);
 		timeShootDelay = Constants.ENEMY_SHOOT_DELAY;
