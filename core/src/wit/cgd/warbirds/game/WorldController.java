@@ -9,6 +9,7 @@ import com.badlogic.gdx.math.Rectangle;
 
 import wit.cgd.warbirds.game.objects.AbstractGameObject;
 import wit.cgd.warbirds.game.objects.AbstractGameObject.State;
+import wit.cgd.warbirds.game.objects.AbstractPowerup;
 import wit.cgd.warbirds.game.objects.Bullet;
 import wit.cgd.warbirds.game.objects.Level;
 import wit.cgd.warbirds.game.objects.enemies.AbstractEnemy;
@@ -74,8 +75,10 @@ public class WorldController extends InputAdapter {
 		for(int k=level.enemies.size; --k>=0;){
 			AbstractEnemy it = level.enemies.get(k);
 			if(it.state == AbstractEnemy.State.DEAD){
-				if(it.health <= 0) level.player.score += it.score;
-				else{	//Enemy was not killed
+				if(it.health <= 0){
+					level.player.score += it.score;
+					level.spawnPowerup(it.position);		
+				}else{	//Enemy was not killed
 					if(it.enemyType.equals("enemySimple")) level.enemySimpleLimit++;
 					else if(it.enemyType.equals("enemyNormal")) level.enemyNormalLimit++;
 					else level.enemyDifficultLimit++;
@@ -87,6 +90,18 @@ public class WorldController extends InputAdapter {
 			} else if(it.state==AbstractEnemy.State.ACTIVE && !isInScreen(it)){
 				it.state = AbstractEnemy.State.DYING;
 				it.timeToDie = 0f;
+			}
+		}
+		
+		//cull powerups
+		for(int k=level.powerups.size; --k>=0;){
+			AbstractPowerup it = level.powerups.get(k);
+			if (it.state == AbstractPowerup.State.DEAD) {
+				level.powerups.removeIndex(k);
+				level.powerupsPool.free(it);
+			} else if (it.state==AbstractPowerup.State.ACTIVE && !isInScreen(it)) {
+				it.state = AbstractPowerup.State.DYING;
+				it.timeToDie = 0f;;
 			}
 		}
 	}
@@ -102,6 +117,13 @@ public class WorldController extends InputAdapter {
 			if (!collisionObject1.overlaps(collisionObject2)) continue;
 			if(bullet.isSourcePlayer) continue;
 			checkBulletPlayerCollision(bullet);
+		}
+		
+		for(AbstractPowerup powerup : level.powerups){
+			collisionObject2.set(powerup.position.x, powerup.position.y, powerup.dimension.x,
+					powerup.dimension.y);
+			if (!collisionObject1.overlaps(collisionObject2)) continue;
+			checkPlayerPowerCollision(powerup);
 		}
 		
 		for(AbstractEnemy currentEnemy : level.enemies){
@@ -132,7 +154,10 @@ public class WorldController extends InputAdapter {
 	}
 	
 	private void checkBulletPlayerCollision(Bullet bullet) {
-		if(level.player.health > 0) level.player.health--;
+		if(level.player.health > 0){
+			if(level.player.shield > 0) level.player.shield -= Constants.BULLET_DAMAGE;
+			else level.player.health -= Constants.BULLET_DAMAGE;
+		}
 		bullet.state = AbstractGameObject.State.DEAD;
 	}
 	
@@ -140,6 +165,10 @@ public class WorldController extends InputAdapter {
 		boolean hitLeftSide = current.position.x < (other.position.x + other.dimension.x/2);
 		if(hitLeftSide) current.position.x = other.position.x - other.dimension.x;
 		else current.position.x = other.position.x + other.dimension.x;
+	}
+	
+	private void checkPlayerPowerCollision(AbstractPowerup power){
+		power.executePowerup(level.player);
 	}
 	
 
@@ -160,16 +189,16 @@ public class WorldController extends InputAdapter {
 	private void handleGameInput(float deltaTime) {
 
 		if (Gdx.input.isKeyPressed(Keys.A)) {
-			level.player.velocity.x = -Constants.PLANE_H_SPEED;
+			level.player.velocity.x = (float) (-Constants.PLANE_H_SPEED * ((level.player.extraSpeed)? 1.5 : 1));
 		} else if (Gdx.input.isKeyPressed(Keys.D)) {
-			level.player.velocity.x = Constants.PLANE_H_SPEED;
+			level.player.velocity.x = (float) (Constants.PLANE_H_SPEED * ((level.player.extraSpeed)? 1.5 : 1));
 		} else {
 			level.player.velocity.x = 0;
 		}
 		if (Gdx.input.isKeyPressed(Keys.W)) {
-			level.player.velocity.y = Constants.PLANE_MAX_V_SPEED;
+			level.player.velocity.y = (float) (Constants.PLANE_MAX_V_SPEED * ((level.player.extraSpeed)? 1.5 : 1));
 		} else if (Gdx.input.isKeyPressed(Keys.S)) {
-			level.player.velocity.y = Constants.PLANE_MIN_V_SPEED;
+			level.player.velocity.y = (float) (Constants.PLANE_MIN_V_SPEED * ((level.player.extraSpeed)? 1.5 : 1));
 		} else {
 			level.player.velocity.y = Constants.SCROLL_SPEED;
 		}

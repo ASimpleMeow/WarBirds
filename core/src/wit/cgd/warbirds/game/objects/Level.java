@@ -51,6 +51,15 @@ public class Level extends AbstractGameObject {
     	}
     };
     
+    public final Array<AbstractPowerup> powerups = new Array<AbstractPowerup>();
+    
+    public final Pool<AbstractPowerup> powerupsPool = new Pool<AbstractPowerup>() {
+    	@Override
+    	protected AbstractPowerup newObject() {
+    		return new AbstractPowerup(level);
+    	}
+    };
+    
     public final EnemyPoolCollection enemyPools = new EnemyPoolCollection();
     
 	/**
@@ -178,6 +187,17 @@ public class Level extends AbstractGameObject {
 		
 		for (Bullet bullet: bullets)
 			bullet.render(batch);
+		
+		for (AbstractPowerup powerup : powerups)
+			powerup.render(batch);
+	}
+	
+	public void spawnPowerup(Vector2 spawnPosition){
+		if(randomGenerator.nextDouble() > 0.3) return;
+		AbstractPowerup powerup = powerupsPool.obtain();
+		powerup.setPower(randomGenerator.nextInt(4));
+		powerup.position.set(spawnPosition);
+		powerups.add(powerup);
 	}
 
 }

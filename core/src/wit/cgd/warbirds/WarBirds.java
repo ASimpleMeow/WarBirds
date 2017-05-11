@@ -12,6 +12,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import wit.cgd.warbirds.game.Assets;
 import wit.cgd.warbirds.game.screens.GameScreen;
 import wit.cgd.warbirds.game.screens.MenuScreen;
+import wit.cgd.warbirds.game.util.AudioManager;
 import wit.cgd.warbirds.game.util.GamePreferences;
 
 public class WarBirds extends Game {
@@ -28,8 +29,8 @@ public class WarBirds extends Game {
 		// Load preferences for audio settings 
 		GamePreferences.instance.load();
 		
-		// TODO start playing music
-		// AudioManager.instance.play(Assets.instance.music.song01);
+		// start playing music
+		AudioManager.instance.play(Assets.instance.music.themeSong);
 
 		// TODO Start game at menu screen
 		setScreen(new MenuScreen(this));

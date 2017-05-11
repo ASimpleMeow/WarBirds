@@ -83,13 +83,6 @@ public abstract class AbstractGameObject {
 
 	protected void updateMotionY(float deltaTime) {}
 	
-	/*
-	public boolean isInScreen()  {
-		return ((position.x>-Constants.VIEWPORT_WIDTH/2 && position.x<Constants.VIEWPORT_WIDTH/2) && 
-				(position.y>level.start && position.y<level.end));
-		
-	}*/
-	
 	public void resetLevel(Level level){
 		this.level = level;
 	}

@@ -47,4 +47,8 @@ public class Constants {
 	public static final int		ENEMY_DIFFICULT_HEALTH = 8;
 	
 	public static final int		BULLET_DAMAGE		= 2;
+	
+	//Powerup constants
+	public static final float	DOUBLE_BULLET_TIMER	= 5f;
+	public static final float	EXTRA_SPEED_TIMER	= 3f;
 }

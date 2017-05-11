@@ -16,6 +16,14 @@ public class Player extends AbstractGameObject {
 	private TextureRegion region;
 	private float timeShootDelay;
 	
+	public boolean doubleBullet;
+	private float doubleBulletTimer;
+	
+	public boolean extraSpeed;
+	private float extraSpeedTimer;
+	
+	public int	shield;
+	
 	public Player (Level level) {
 		super(level);
 		init();
@@ -34,6 +42,14 @@ public class Player extends AbstractGameObject {
 		health = Constants.PlAYER_HEALTH;
 		score = 0;
 		
+		doubleBullet = false;
+		doubleBulletTimer = Constants.DOUBLE_BULLET_TIMER;
+		
+		extraSpeed = false;
+		extraSpeedTimer = Constants.EXTRA_SPEED_TIMER;
+		
+		shield = 0;
+		
 		state = State.ACTIVE;
 	}
 	
@@ -42,6 +58,20 @@ public class Player extends AbstractGameObject {
 		super.update(deltaTime);
 		position.x = MathUtils.clamp(position.x,-Constants.VIEWPORT_WIDTH/2+0.5f,Constants.VIEWPORT_WIDTH/2-0.5f);
 		position.y = MathUtils.clamp(position.y,level.start+2, level.end-2);
+		
+		if(doubleBullet) doubleBulletTimer -= deltaTime;
+		if(doubleBulletTimer <= 0){
+			doubleBullet = false;
+			doubleBulletTimer = Constants.DOUBLE_BULLET_TIMER;
+		}
+		
+		if(extraSpeed) extraSpeedTimer -= deltaTime;
+		if(extraSpeedTimer <= 0){
+			extraSpeed = false;
+			extraSpeedTimer = Constants.EXTRA_SPEED_TIMER;
+		}
+		
+		if(shield <= 0) shield = 0;
 		
 		timeShootDelay -= deltaTime;
 	}
@@ -56,7 +86,7 @@ public class Player extends AbstractGameObject {
 		bullet.position.set(position);
 		bullet.isSourcePlayer =true;
 		level.bullets.add(bullet);
-		timeShootDelay = Constants.PLAYER_SHOOT_DELAY;
+		timeShootDelay = (doubleBullet)?Constants.PLAYER_SHOOT_DELAY/2 : Constants.PLAYER_SHOOT_DELAY;
 
 	}
 	
@@ -68,6 +98,12 @@ public class Player extends AbstractGameObject {
 			dimension.x, dimension.y, scale.x, scale.y, rotation, 
 			region.getRegionX(), region.getRegionY(), region.getRegionWidth(), region.getRegionHeight(), 
 			false, false);
+		if(shield <= 0) return;
+		region = Assets.instance.shield.region;
+		batch.draw(region.getTexture(), position.x-origin.x, position.y-origin.y, origin.x, origin.y, 
+				dimension.x, dimension.y, scale.x, scale.y, rotation, 
+				region.getRegionX(), region.getRegionY(), region.getRegionWidth(), region.getRegionHeight(), 
+				false, false);
 	}
 	
 }

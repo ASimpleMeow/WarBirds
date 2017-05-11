@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.assets.AssetErrorListener;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
@@ -37,7 +38,9 @@ public class Assets implements Disposable, AssetErrorListener {
 	public Asset				bullet;
 	public Asset				doubleBullet;
 	public AssetLevelDecoration	levelDecoration;
+	public Asset				shield;
 	public Array<Asset>			levelNumber;
+	public Array<Asset>			powerups;
 
 	private Assets() {}
 
@@ -49,11 +52,16 @@ public class Assets implements Disposable, AssetErrorListener {
 		// load texture for game sprites
 		assetManager.load(Constants.TEXTURE_ATLAS_GAME, TextureAtlas.class);
 
-		// TODO load sounds
-		// assetManager.load("sounds/FILENAME", Sound.class);
+		// load sounds
+		assetManager.load("sounds/sfx_blast.wav", Sound.class);
+		assetManager.load("sounds/sfx_gun1.wav", Sound.class);
+		assetManager.load("sounds/sfx_gun2.wav", Sound.class);
+		assetManager.load("sounds/sfx_pickup.wav", Sound.class);
+		assetManager.load("sounds/sfx_powerup.wav", Sound.class);
 
 		// load music
-		// assetManager.load("music/FILENAME", Music.class);
+		assetManager.load("music/song_theme.mp3", Music.class);
+		assetManager.load("music/song_boss.mp3", Music.class);
 
 		assetManager.finishLoading();
 
@@ -77,10 +85,17 @@ public class Assets implements Disposable, AssetErrorListener {
 		enemyDifficult = new AssetPlayer(atlas, "enemy_plane_white", "explosion_big");
 		
 		levelDecoration = new AssetLevelDecoration(atlas);
+		shield = new Asset(atlas, "shield");
 		bullet = new Asset(atlas, "bullet");
 		doubleBullet  = new Asset(atlas, "bullet_double");
 		levelNumber = new Array<Asset>();
 		for(int i = 1; i < 9; ++i) levelNumber.add(new Asset(atlas, String.format("wave%d", i)));
+		
+		powerups = new Array<Asset>();
+		powerups.add(new Asset(atlas, "powerup_icon"));
+		powerups.add(new Asset(atlas, "double_bullets_icon"));
+		powerups.add(new Asset(atlas, "health_icon"));
+		powerups.add(new Asset(atlas, "shield_icon"));
 		
 		// create sound and music resource objects
 		sounds = new AssetSounds(assetManager);
@@ -157,23 +172,28 @@ public class Assets implements Disposable, AssetErrorListener {
 	}
 
 	public class AssetSounds {
-
-		// TODO list reference to sound assets
-		// public final Sound first;
+		public final Sound blast;
+		public final Sound gun1;
+		public final Sound gun2;
+		public final Sound pickup;
+		public final Sound powerup;
 
 		public AssetSounds(AssetManager am) {
-			// TODO 
-			// first = am.get("sounds/FILENAME", Sound.class);
+			blast = am.get("sounds/sfx_blast.wav", Sound.class);
+			gun1 = am.get("sounds/sfx_gun1.wav", Sound.class);
+			gun2 = am.get("sounds/sfx_gun2.wav", Sound.class);
+			pickup = am.get("sounds/sfx_pickup.wav", Sound.class);
+			powerup = am.get("sounds/sfx_powerup.wav", Sound.class);
 		}
 	}
 
 	public class AssetMusic {
-		// TODO list reference to music assets
-		// public final Music song01;
+		public final Music themeSong;
+		public final Music bossSong;
 
 		public AssetMusic(AssetManager am) {
-			// TODO
-			// song01 = am.get("music/FILENAME", Music.class);
+			themeSong = am.get("music/song_theme.mp3", Music.class);
+			bossSong = am.get("music/song_boss.mp3", Music.class);
 		}
 	}
 
