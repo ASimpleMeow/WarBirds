@@ -95,7 +95,8 @@ public class WorldRenderer implements Disposable {
 	}
 	
 	private void renderGuiScore(SpriteBatch batch) {
-        Assets.instance.fonts.defaultBig.draw(batch, "" + worldController.level.player.score, cameraGUI.viewportWidth-100, 22);
+		Assets.instance.fonts.defaultNormal.draw(batch, "Score: ", cameraGUI.viewportWidth-350, 20);
+        Assets.instance.fonts.defaultBig.draw(batch, "" + worldController.level.player.score, cameraGUI.viewportWidth-175, 20);
     }
 	
 	private void renderGuiHealth(SpriteBatch batch){
