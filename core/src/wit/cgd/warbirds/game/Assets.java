@@ -30,10 +30,11 @@ public class Assets implements Disposable, AssetErrorListener {
 	public AssetSounds			sounds;
 	public AssetMusic			music;
 
-	public AssetPlayer			player;
-	public AssetPlayer			enemySimple;
-	public AssetPlayer			enemyNormal;
-	public AssetPlayer			enemyDifficult;
+	public AssetAnimation			player;
+	public AssetAnimation			enemySimple;
+	public AssetAnimation			enemyNormal;
+	public AssetAnimation			enemyDifficult;
+	public AssetAnimation			explosionBig;
 	
 	public Asset				bullet;
 	public Asset				doubleBullet;
@@ -79,11 +80,13 @@ public class Assets implements Disposable, AssetErrorListener {
 		fonts = new AssetFonts();
 
 		// create game resource objects
-		player = new AssetPlayer(atlas,"player", "explosion_large");
+		player = new AssetAnimation(atlas,"player");
 		
-		enemySimple = new AssetPlayer(atlas, "enemy_plane_green", "explosion_big");
-		enemyNormal = new AssetPlayer(atlas, "enemy_plane_yellow", "explosion_big");
-		enemyDifficult = new AssetPlayer(atlas, "enemy_plane_white", "explosion_big");
+		enemySimple = new AssetAnimation(atlas, "enemy_plane_green");
+		enemyNormal = new AssetAnimation(atlas, "enemy_plane_yellow");
+		enemyDifficult = new AssetAnimation(atlas, "enemy_plane_white");
+		
+		explosionBig = new AssetAnimation(atlas, "explosion_big");
 		
 		levelDecoration = new AssetLevelDecoration(atlas);
 		shield = new Asset(atlas, "shield");
@@ -129,15 +132,12 @@ public class Assets implements Disposable, AssetErrorListener {
 		}
 	}
 
-	public class AssetPlayer {
-		public final Animation<TextureRegion>		animationNormal;
-		public final Animation<TextureRegion>		animationDeath;
+	public class AssetAnimation {
+		public final Animation<TextureRegion>		animation;
 
-		public AssetPlayer(TextureAtlas atlas, String name, String explosionType) {
+		public AssetAnimation(TextureAtlas atlas, String name) {
 			Array<AtlasRegion> regions = atlas.findRegions(name);
-			animationNormal = new Animation<TextureRegion>(1.0f / 15.0f, regions, Animation.PlayMode.LOOP);
-			regions = atlas.findRegions(explosionType);
-			animationDeath = new Animation<TextureRegion>(1.0f / 15.0f, regions, Animation.PlayMode.LOOP);
+			animation = new Animation<TextureRegion>(1.0f / 15.0f, regions, Animation.PlayMode.LOOP);
 			Gdx.app.log(TAG, "Loaded asset animation '" + name + "'");
 		}
 	}

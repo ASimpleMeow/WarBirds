@@ -22,7 +22,7 @@ public class Player extends AbstractGameObject {
 	public boolean extraSpeed;
 	private float extraSpeedTimer;
 	
-	public int	shield;
+	public float shield;
 	
 	public Player (Level level) {
 		super(level);
@@ -32,7 +32,7 @@ public class Player extends AbstractGameObject {
 	public void init() {
 		dimension.set(1, 1);	
 		
-		animation = Assets.instance.player.animationNormal;
+		animation = Assets.instance.player.animation;
 		setAnimation(animation);
 
 		// Center image on game object

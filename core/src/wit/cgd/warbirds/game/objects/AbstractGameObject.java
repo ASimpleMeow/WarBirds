@@ -23,7 +23,7 @@ public abstract class AbstractGameObject {
 	public Vector2		friction;
 	public Vector2		acceleration;
 	
-	public int			health;
+	public float		health;
 	public int 			score;
 
 	public float		stateTime;
@@ -58,9 +58,6 @@ public abstract class AbstractGameObject {
 		if (state == State.ASLEEP) return; 
 		
 		stateTime += deltaTime;
-		
-		updateMotionX(deltaTime);
-		updateMotionY(deltaTime);
 
 		// Move to new position
 		position.x += velocity.x * deltaTime;
@@ -78,10 +75,6 @@ public abstract class AbstractGameObject {
 	}
 
 	public abstract void render(SpriteBatch batch);
-
-	protected void updateMotionX(float deltaTime) {}
-
-	protected void updateMotionY(float deltaTime) {}
 	
 	public void resetLevel(Level level){
 		this.level = level;

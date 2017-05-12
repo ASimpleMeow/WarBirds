@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Pool.Poolable;
 
 import wit.cgd.warbirds.game.Assets;
+import wit.cgd.warbirds.game.objects.AbstractGameObject.State;
 import wit.cgd.warbirds.game.util.Constants;
 
 public class AbstractPowerup extends AbstractGameObject implements Poolable{
@@ -25,6 +26,7 @@ public class AbstractPowerup extends AbstractGameObject implements Poolable{
 
 		// Center image on game object
 		origin.set(dimension.x / 2, dimension.y / 2);
+		state = State.ACTIVE;
 	}
 
 	@Override
@@ -49,15 +51,14 @@ public class AbstractPowerup extends AbstractGameObject implements Poolable{
 			player.doubleBullet = true;
 			break;
 		case 2:						//Health powerup
-			player.health += ((player.health+5) <= Constants.PlAYER_HEALTH)?
-					5 : (Constants.PlAYER_HEALTH - player.health);
+			player.health += ((player.health+5f) <= Constants.PlAYER_HEALTH)?
+					5f : (Constants.PlAYER_HEALTH - player.health);
 			break;
 		case 3:
-			player.shield = 6;		//Shield powerup
+			player.shield = Constants.PLAYER_SHIELD;		//Shield powerup
 			break;
 		}
 		player.score += 5;
-		state = State.DEAD;
 	}
 	
 	@Override

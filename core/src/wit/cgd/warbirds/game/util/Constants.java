@@ -34,19 +34,20 @@ public class Constants {
 	public static final float	PLANE_MAX_V_SPEED	= 4 * SCROLL_SPEED;
 
 	public static final float	PLAYER_SHOOT_DELAY	= 0.2f;
-	public static final float	ENEMY_SHOOT_DELAY 	= 1f;
+	public static final float	ENEMY_SHOOT_DELAY 	= 1.2f;
 	public static final float	BULLET_SPEED		= 2.0f * PLANE_MAX_V_SPEED;
 
 	public static final float	BULLET_DIE_DELAY	= 1.2f;
 	public static final float	ENEMY_DIE_DELAY		= 0.5f;
 	
 	//Health constants
-	public static final int		PlAYER_HEALTH		= 20;
-	public static final int		ENEMY_SIMPLE_HEALTH	= 4;
-	public static final int		ENEMY_NORMAL_HEALTH	= 6;
-	public static final int		ENEMY_DIFFICULT_HEALTH = 8;
+	public static final float		PlAYER_HEALTH		= 20f;
+	public static final float		PLAYER_SHIELD		= 6f;
+	public static final float		ENEMY_SIMPLE_HEALTH	= 4f;
+	public static final float		ENEMY_NORMAL_HEALTH	= 6f;
+	public static final float		ENEMY_DIFFICULT_HEALTH = 8f;
 	
-	public static final int		BULLET_DAMAGE		= 2;
+	public static final float		BULLET_DAMAGE		= 2f;
 	
 	//Powerup constants
 	public static final float	DOUBLE_BULLET_TIMER	= 5f;

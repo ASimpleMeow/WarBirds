@@ -25,24 +25,17 @@ public class EnemyDifficult extends AbstractEnemy{
 	
 	public void update(float deltaTime, Player player){
 		super.update(deltaTime);
-		if(health > 0){
-			super.turnTowards((player.position.y > position.y)? null : player);
-			super.moveTowards((player.position.y > position.y)? null : player);
-			super.shootAt((player.position.y > position.y)? null : player);
-		}else{
-			if(state == State.ACTIVE){
-				state = State.DYING;
-				animation = Assets.instance.enemyDifficult.animationDeath;
-				setAnimation(animation);
-			}
-		}
+		if(health <= 0) return;
+		super.turnTowards((player.position.y > position.y)? null : player.position);
+		super.moveTowards((player.position.y > position.y)? null : player.position);
+		super.shoot();
 	}
 
 	@Override
 	public void reset(){
 		super.reset();
 		health = Constants.ENEMY_DIFFICULT_HEALTH;
-		animation = Assets.instance.enemyDifficult.animationNormal;
+		animation = Assets.instance.enemyDifficult.animation;
 		setAnimation(animation);
 	}
 }

@@ -27,7 +27,7 @@ public class Level extends AbstractGameObject {
 
 	public Player				player	= null;
 	public LevelDecoration		levelDecoration;
-	public Random				randomGenerator;
+	public Random				rng;
 	public Array<AbstractEnemy>	enemies;
 	public float				start;
 	public float				end;
@@ -107,7 +107,7 @@ public class Level extends AbstractGameObject {
 		LevelMap data = new LevelMap();
 		data = json.fromJson(LevelMap.class, map);
 		Gdx.app.log(TAG, "Level Seed...");
-		randomGenerator = new Random(data.seed);
+		rng = new Random(data.seed);
 				
 		Gdx.app.log(TAG, "Enemies . . . ");
 		for(Object e : data.enemies){
@@ -131,13 +131,14 @@ public class Level extends AbstractGameObject {
 		System.out.println("Player Score : "+player.score);
 		
 		while(enemies.size < 3){
-			float x = randomGenerator.nextInt(((int)Constants.VIEWPORT_WIDTH))*2 - Constants.VIEWPORT_WIDTH - 0.5f;
-			float y = end;
+			float x = rng.nextInt(((int)Constants.VIEWPORT_WIDTH))*2 - Constants.VIEWPORT_WIDTH - 0.5f;
+			x = MathUtils.clamp(x,-Constants.VIEWPORT_WIDTH/2+1f,Constants.VIEWPORT_WIDTH/2-1f);
+			float y = end -1  + rng.nextInt(2);
 			AbstractEnemy newEnemy;
-			if(enemyDifficultLimit > 0 && randomGenerator.nextDouble() < 0.1){
+			if(enemyDifficultLimit > 0 && rng.nextDouble() < 0.1){
 				newEnemy = enemyPools.enemyDifficultPool.obtain();
 				enemyDifficultLimit--;
-			}else if(enemyNormalLimit > 0 && randomGenerator.nextDouble() < 0.4){
+			}else if(enemyNormalLimit > 0 && rng.nextDouble() < 0.4){
 				newEnemy = enemyPools.enemyNormalPool.obtain();
 				enemyNormalLimit--;
 			}else if(enemySimpleLimit > 0){
@@ -168,12 +169,13 @@ public class Level extends AbstractGameObject {
 		
 		islandTimer -= deltaTime;
 		
-		if(randomGenerator.nextDouble() < 0.5) return;
+		if(rng.nextDouble() < 0.5) return;
 		if(islandTimer > 0) return;
-		float x = randomGenerator.nextInt(((int)Constants.VIEWPORT_WIDTH))*2 - Constants.VIEWPORT_WIDTH;
+		float x = rng.nextInt(((int)Constants.VIEWPORT_WIDTH))*2 - Constants.VIEWPORT_WIDTH;
+		x = MathUtils.clamp(x,-Constants.VIEWPORT_WIDTH/2+0.5f,Constants.VIEWPORT_WIDTH/2-0.5f);
 		float y = end;
-		float scale = randomGenerator.nextFloat() + 0.5f;
-		levelDecoration.add(islands[randomGenerator.nextInt(3)], x/2, y, scale, randomGenerator.nextInt(360));
+		float scale = rng.nextFloat() + 0.5f;
+		levelDecoration.add(islands[rng.nextInt(3)], x/2, y, scale, rng.nextInt(360));
 		islandTimer = ISLAND_DELAY_TIME;
 	}
 
@@ -193,9 +195,9 @@ public class Level extends AbstractGameObject {
 	}
 	
 	public void spawnPowerup(Vector2 spawnPosition){
-		if(randomGenerator.nextDouble() > 0.3) return;
+		if(rng.nextDouble() > 0.3) return;
 		AbstractPowerup powerup = powerupsPool.obtain();
-		powerup.setPower(randomGenerator.nextInt(4));
+		powerup.setPower(rng.nextInt(4));
 		powerup.position.set(spawnPosition);
 		powerups.add(powerup);
 	}

@@ -62,11 +62,11 @@ public class WorldController extends InputAdapter {
 		// cull bullets 
 		for (int k=level.bullets.size; --k>=0; ) { 	// traverse array backwards !!!
 			Bullet it = level.bullets.get(k);
-			if (it.state == Bullet.State.DEAD) {
+			if (it.state == AbstractGameObject.State.DEAD) {
 				level.bullets.removeIndex(k);
 				level.bulletPool.free(it);
-			} else if (it.state==Bullet.State.ACTIVE && !isInScreen(it)) {
-				it.state = Bullet.State.DYING;
+			} else if (it.state==AbstractGameObject.State.ACTIVE && !isInScreen(it)) {
+				it.state = AbstractGameObject.State.DYING;
 				it.timeToDie = Constants.BULLET_DIE_DELAY;
 			}
 		}
@@ -74,7 +74,7 @@ public class WorldController extends InputAdapter {
 		// cull enemies
 		for(int k=level.enemies.size; --k>=0;){
 			AbstractEnemy it = level.enemies.get(k);
-			if(it.state == AbstractEnemy.State.DEAD){
+			if(it.state == AbstractGameObject.State.DEAD){
 				if(it.health <= 0){
 					level.player.score += it.score;
 					level.spawnPowerup(it.position);		
@@ -87,21 +87,21 @@ public class WorldController extends InputAdapter {
 				if(it.enemyType.equals("enemySimple")) level.enemyPools.enemySimplePool.free((EnemySimple) it);
 				else if(it.enemyType.equals("enemyNormal")) level.enemyPools.enemyNormalPool.free((EnemyNormal) it);
 				else level.enemyPools.enemyDifficultPool.free((EnemyDifficult) it);
-			} else if(it.state==AbstractEnemy.State.ACTIVE && !isInScreen(it)){
-				it.state = AbstractEnemy.State.DYING;
-				it.timeToDie = 0f;
+			} else if(it.state==AbstractGameObject.State.ACTIVE && !isInScreen(it)){
+				it.state = AbstractGameObject.State.DYING;
+				it.timeToDie = Constants.ENEMY_DIE_DELAY;
 			}
 		}
 		
 		//cull powerups
 		for(int k=level.powerups.size; --k>=0;){
 			AbstractPowerup it = level.powerups.get(k);
-			if (it.state == AbstractPowerup.State.DEAD) {
+			System.out.println("!!!STATE ------"+it.state);
+			if (it.state == AbstractGameObject.State.DEAD) {
 				level.powerups.removeIndex(k);
 				level.powerupsPool.free(it);
-			} else if (it.state==AbstractPowerup.State.ACTIVE && !isInScreen(it)) {
-				it.state = AbstractPowerup.State.DYING;
-				it.timeToDie = 0f;;
+			} else if (it.state==AbstractGameObject.State.ACTIVE && !isInScreen(it)) {
+				it.state = AbstractGameObject.State.DEAD;
 			}
 		}
 	}
@@ -127,22 +127,30 @@ public class WorldController extends InputAdapter {
 		}
 		
 		for(AbstractEnemy currentEnemy : level.enemies){
-			collisionObject1.set(currentEnemy.position.x, currentEnemy.position.y, currentEnemy.dimension.x,
+			collisionObject1.set(level.player.position.x, level.player.position.y,level.player.dimension.x,
+					level.player.dimension.y);
+			
+			collisionObject2.set(currentEnemy.position.x, currentEnemy.position.y, currentEnemy.dimension.x,
 					currentEnemy.dimension.y);
 			
+			if(collisionObject1.overlaps(collisionObject2)){
+				checkEnemyPlayerCollision(currentEnemy);
+				continue;
+			}
+			
 			for(Bullet bullet : level.bullets){
-				collisionObject2.set(bullet.position.x, bullet.position.y, bullet.dimension.x,
+				collisionObject1.set(bullet.position.x, bullet.position.y, bullet.dimension.x,
 						bullet.dimension.y);
-				if (!collisionObject1.overlaps(collisionObject2)) continue;
+				if (!collisionObject2.overlaps(collisionObject1)) continue;
 				if(!bullet.isSourcePlayer) continue;
 				checkBulletEnemyCollision(currentEnemy, bullet);
 			}
 			
 			for(int i = 0; i < level.enemies.size; ++i){
 				if(currentEnemy.equals(level.enemies.get(i))) continue;
-				collisionObject2.set(level.enemies.get(i).position.x, level.enemies.get(i).position.y,
+				collisionObject1.set(level.enemies.get(i).position.x, level.enemies.get(i).position.y,
 						level.enemies.get(i).dimension.x, level.enemies.get(i).dimension.y);
-				if(!collisionObject1.overlaps(collisionObject2)) continue;
+				if(!collisionObject2.overlaps(collisionObject1)) continue;
 				checkEnemyEnemyCollision(currentEnemy, level.enemies.get(i));
 			}
 		}
@@ -151,6 +159,14 @@ public class WorldController extends InputAdapter {
 	private void checkBulletEnemyCollision(AbstractEnemy enemy, Bullet bullet) {
 		enemy.health -= Constants.BULLET_DAMAGE;
 		bullet.state = AbstractGameObject.State.DYING;
+	}
+	
+	private void checkEnemyPlayerCollision(AbstractEnemy enemy){
+		boolean hitLeftSide = level.player.position.x < (enemy.position.x + enemy.dimension.x/2);
+		if(hitLeftSide) level.player.position.x -= 0.1f;
+		else level.player.position.x += 0.1f;
+		
+		level.player.health -= 0.1f;
 	}
 	
 	private void checkBulletPlayerCollision(Bullet bullet) {
@@ -167,6 +183,7 @@ public class WorldController extends InputAdapter {
 	
 	private void checkPlayerPowerCollision(AbstractPowerup power){
 		power.executePowerup(level.player);
+		power.state = AbstractGameObject.State.DEAD;
 	}
 	
 

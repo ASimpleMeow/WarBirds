@@ -13,6 +13,7 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Pool.Poolable;
 
 public abstract class AbstractEnemy extends AbstractGameObject implements Poolable{
@@ -32,43 +33,49 @@ public abstract class AbstractEnemy extends AbstractGameObject implements Poolab
 	@Override
 	public void update (float deltaTime) {
 		super.update(deltaTime);
-		timeShootDelay -= deltaTime;		
+		timeShootDelay -= deltaTime;
+		if(health <= 0){
+			if(state == State.ACTIVE){
+				state = State.DYING;
+				animation = Assets.instance.explosionBig.animation;
+				setAnimation(animation);
+			}
+		}
 	}
 
-	public void shootAt(AbstractGameObject obj) {
+	public void shoot() {
 		if (timeShootDelay>0) return;
 		// get bullet
 		Bullet bullet = level.bulletPool.obtain();
 		bullet.reset();
 		bullet.position.set(position);
-		bullet.rotation = rotation;
 		bullet.velocity.y = -Constants.BULLET_SPEED/2;
+		bullet.velocity.rotate(rotation);
 		bullet.setRegion(Assets.instance.enemyBullet.region);
-		if(obj != null) bullet.velocity.rotate(rotation);
 		level.bullets.add(bullet);
 		timeShootDelay = Constants.ENEMY_SHOOT_DELAY;
 	}
 	
-	public void turnTowards(AbstractGameObject obj){
+	public void turnTowards(Vector2 obj){
 		if(obj == null){
 			if(rotation > 0) rotation -= 2;
 			else if (rotation < 0) rotation += 2;
 			return;
 		}
-		float angle = (float) Math.atan2(obj.position.y - this.position.y, obj.position.x - this.position.x);
+		float angle = (float) Math.atan2(obj.y - this.position.y, obj.x - this.position.x);
 	    angle = (float) (angle * (180 / Math.PI));
 	    rotation = angle + 90;
 	}
 	
-	public void moveTowards(AbstractGameObject obj){
+	public void moveTowards(Vector2 obj){
 		velocity.y = -Constants.SCROLL_SPEED;
 		velocity.x = 0;
 		if(obj == null) return;
-		if(obj.position.x-position.x < -1) velocity.x = -0.75f;
-		else if (obj.position.x-position.x > 1) velocity.x = 0.75f;
+		if(obj.x-position.x < -1) velocity.x = -0.75f;
+		else if (obj.x-position.x > 1) velocity.x = 0.75f;
 		else velocity.x = 0;
-		if(obj.position.y-position.y < -1) velocity.y = -Constants.SCROLL_SPEED;
-		else if (obj.position.y-position.y > 1) velocity.y = 2 * Constants.SCROLL_SPEED;
+		if(obj.y-position.y < -1) velocity.y = -Constants.SCROLL_SPEED;
+		else if (obj.y-position.y > 1) velocity.y = 2 * Constants.SCROLL_SPEED;
 		else velocity.y = 0;
 	}
 	
@@ -85,8 +92,6 @@ public abstract class AbstractEnemy extends AbstractGameObject implements Poolab
 	@Override
 	public void reset() {
 		System.out.println("Enemy Reset");
-		velocity.y = -Constants.SCROLL_SPEED;
-		velocity.x = 0;
 		rotation = 0;
 		state = State.ACTIVE;
 		timeToDie = Constants.ENEMY_DIE_DELAY;
