@@ -83,11 +83,21 @@ public class WorldRenderer implements Disposable {
 		renderGuiScore(batch);
 		
 		//Render health text in the top right corner
-		renderGuiHealth(batch);
+		renderGuiTextNormal(batch, "Health", 50, 22);
 		
 		//If player has a shield, render shield text
-		if(worldController.level.player.shield > 0) renderGuiShield(batch);
+		if(worldController.level.player.shield > 0) renderGuiTextNormal(batch, "Shield", 50, 60);
 		
+		if(worldController.level.levelStartTimer > 0)
+			renderGuiTextBig(batch, "LEVEL START\n           "+(int)(worldController.level.levelStartTimer+1),
+					Constants.VIEWPORT_GUI_WIDTH,
+					Constants.VIEWPORT_GUI_HEIGHT/3);
+		
+		if(worldController.level.levelBossTimer > 0 && worldController.level.startBoss)
+			renderGuiTextBig(batch, "BOSS START\n           "+(int)(worldController.level.levelBossTimer+1),
+					Constants.VIEWPORT_GUI_WIDTH,
+					Constants.VIEWPORT_GUI_HEIGHT/3);
+			
 		//Render level number in the bottom left corner
 		renderGuiLevelNumber(batch);
 		
@@ -99,12 +109,12 @@ public class WorldRenderer implements Disposable {
         Assets.instance.fonts.defaultBig.draw(batch, "" + worldController.level.player.score, cameraGUI.viewportWidth-175, 20);
     }
 	
-	private void renderGuiHealth(SpriteBatch batch){
-		Assets.instance.fonts.defaultNormal.draw(batch, "Health", 50, 22);
+	private void renderGuiTextNormal(SpriteBatch batch, String text, float x, float y){
+		Assets.instance.fonts.defaultNormal.draw(batch, text, x, y);
 	}
 	
-	private void renderGuiShield(SpriteBatch batch){
-		Assets.instance.fonts.defaultNormal.draw(batch, "Shield", 50, 60);
+	private void renderGuiTextBig(SpriteBatch batch, String text, float x, float y){
+		Assets.instance.fonts.defaultBig.draw(batch, text, x, y);
 	}
 	
 	private void renderGuiLevelNumber(SpriteBatch batch){

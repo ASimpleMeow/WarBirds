@@ -19,6 +19,7 @@ import wit.cgd.warbirds.game.objects.enemies.EnemySimple;
 import wit.cgd.warbirds.game.util.CameraHelper;
 import wit.cgd.warbirds.game.util.Constants;
 import wit.cgd.warbirds.game.util.EnemyPoolCollection;
+import wit.cgd.warbirds.game.util.GamePreferences;
 
 public class WorldController extends InputAdapter {
 
@@ -40,6 +41,7 @@ public class WorldController extends InputAdapter {
 	private void init() {
 		Gdx.input.setInputProcessor(this);
 		level = EnemyPoolCollection.level;//new Level();
+		level.loadLevel(GamePreferences.instance.levelNumber);
 		cameraHelper = new CameraHelper();
 		cameraHelper.setTarget(level);
 	}
@@ -200,7 +202,9 @@ public class WorldController extends InputAdapter {
 	}
 
 	private void handleGameInput(float deltaTime) {
-
+		level.player.velocity.y = Constants.SCROLL_SPEED;
+		if(level.levelStartTimer > 0) return;
+		
 		if (Gdx.input.isKeyPressed(Keys.A)) {
 			level.player.velocity.x = (float) (-Constants.PLANE_H_SPEED * ((level.player.extraSpeed)? 1.5 : 1));
 		} else if (Gdx.input.isKeyPressed(Keys.D)) {
@@ -212,8 +216,6 @@ public class WorldController extends InputAdapter {
 			level.player.velocity.y = (float) (Constants.PLANE_MAX_V_SPEED * ((level.player.extraSpeed)? 1.5 : 1));
 		} else if (Gdx.input.isKeyPressed(Keys.S)) {
 			level.player.velocity.y = (float) (Constants.PLANE_MIN_V_SPEED * ((level.player.extraSpeed)? 1.5 : 1));
-		} else {
-			level.player.velocity.y = Constants.SCROLL_SPEED;
 		}
 		if (Gdx.input.isKeyPressed(Keys.SPACE)) {
 			level.player.shoot();

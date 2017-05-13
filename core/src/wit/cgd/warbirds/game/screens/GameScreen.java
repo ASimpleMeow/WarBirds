@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.GL20;
 
 import wit.cgd.warbirds.game.WorldController;
 import wit.cgd.warbirds.game.WorldRenderer;
+import wit.cgd.warbirds.game.util.GamePreferences;
 
 public class GameScreen extends AbstractGameScreen {
 
@@ -13,13 +14,11 @@ public class GameScreen extends AbstractGameScreen {
 
 	private WorldController		worldController;
 	private WorldRenderer		worldRenderer;
-	private int					levelNumber;
 
 	private boolean				paused;
 
-	public GameScreen(Game game, int levelNumber) {
+	public GameScreen(Game game) {
 		super(game);
-		this.levelNumber = levelNumber;
 	}
 
 	@Override
@@ -44,7 +43,6 @@ public class GameScreen extends AbstractGameScreen {
 	@Override
 	public void show() {
 		worldController = new WorldController(game);
-		worldController.level.loadLevel(levelNumber);
 		worldRenderer = new WorldRenderer(worldController);
 		Gdx.input.setCatchBackKey(true);
 	}

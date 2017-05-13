@@ -26,6 +26,7 @@ public class Level extends AbstractGameObject {
 	public static final String	TAG		= Level.class.getName();
 
 	public Player				player	= null;
+	public Boss					boss = null;
 	public LevelDecoration		levelDecoration;
 	public Random				rng;
 	public Array<AbstractEnemy>	enemies;
@@ -40,6 +41,10 @@ public class Level extends AbstractGameObject {
 	
 	private String[] islands = {"islandBig","islandSmall","islandTiny"};
 	private float islandTimer;
+	public float levelStartTimer;
+	public float levelBossTimer;
+	public boolean startBoss;
+	
 	private final float ISLAND_DELAY_TIME = 1.2f;
 	
 	public final Array<Bullet> bullets = new Array<Bullet>();
@@ -80,7 +85,6 @@ public class Level extends AbstractGameObject {
 
 	public Level() {
 		super(null);
-		init();
 	}
 
 	private void init() {
@@ -95,9 +99,14 @@ public class Level extends AbstractGameObject {
 		position.set(0, 0);
 		velocity.y = Constants.SCROLL_SPEED;
 		state = State.ACTIVE;
+		levelStartTimer = Constants.LEVEL_START_DELAY;
+		levelBossTimer = Constants.LEVEL_BOSS_DELAY;
+		startBoss = false;
 	}
 	
 	public void loadLevel(int levelNumber){
+		init();
+		
 		this.levelNumber = levelNumber;
 		// read and parse level map (form a json file)
 		String map = Gdx.files.internal(String.format("levels/level-%d.json",levelNumber)).readString();
@@ -128,8 +137,57 @@ public class Level extends AbstractGameObject {
 		end = position.y + scale.y * Constants.VIEWPORT_HEIGHT;
 
 		player.update(deltaTime);
-		System.out.println("Player Score : "+player.score);
 		
+		if(enemies.size+enemySimpleLimit+enemyNormalLimit+enemyDifficultLimit == 0) startBoss = true;
+		
+		if(startBoss) levelBossTimer -= deltaTime;
+		
+		if(levelBossTimer <= 0 && boss == null){
+			boss = new Boss(this);
+			boss.position.set(0, end);
+		}
+		
+		if(levelStartTimer <= 0) spawnEnemy();
+		else levelStartTimer -= deltaTime;
+		
+		islandTimer -= deltaTime;
+		spawnIslands();
+		
+		if(boss != null) boss.update(deltaTime);
+		
+		for(AbstractEnemy enemy : enemies)
+			enemy.update(deltaTime);
+		
+		for (Bullet bullet: bullets)
+			bullet.update(deltaTime);
+	}
+
+	public void render(SpriteBatch batch) {
+
+		levelDecoration.render(batch);
+		player.render(batch);
+		
+		if(boss != null) boss.render(batch);
+		
+		for(AbstractEnemy enemies : enemies)
+			enemies.render(batch);
+		
+		for (Bullet bullet: bullets)
+			bullet.render(batch);
+		
+		for (AbstractPowerup powerup : powerups)
+			powerup.render(batch);
+	}
+	
+	public void spawnPowerup(Vector2 spawnPosition){
+		if(rng.nextDouble() > 0.3) return;
+		AbstractPowerup powerup = powerupsPool.obtain();
+		powerup.setPower(rng.nextInt(4));
+		powerup.position.set(spawnPosition);
+		powerups.add(powerup);
+	}
+	
+	private void spawnEnemy(){
 		while(enemies.size < 3){
 			float x = rng.nextInt(((int)Constants.VIEWPORT_WIDTH))*2 - Constants.VIEWPORT_WIDTH - 0.5f;
 			x = MathUtils.clamp(x,-Constants.VIEWPORT_WIDTH/2+1f,Constants.VIEWPORT_WIDTH/2-1f);
@@ -152,15 +210,9 @@ public class Level extends AbstractGameObject {
 			newEnemy.position.set(x,y);
 			enemies.add(newEnemy);
 		}
-		
-		for(AbstractEnemy enemy : enemies)
-			enemy.update(deltaTime);
-		
-		for (Bullet bullet: bullets)
-			bullet.update(deltaTime);
-		
-		islandTimer -= deltaTime;
-		
+	}
+	
+	private void spawnIslands(){
 		if(rng.nextDouble() < 0.5) return;
 		if(islandTimer > 0) return;
 		float x = rng.nextInt(((int)Constants.VIEWPORT_WIDTH))*2 - Constants.VIEWPORT_WIDTH;
@@ -169,29 +221,6 @@ public class Level extends AbstractGameObject {
 		float scale = rng.nextFloat() + 0.5f;
 		levelDecoration.add(islands[rng.nextInt(3)], x/2, y, scale, rng.nextInt(360));
 		islandTimer = ISLAND_DELAY_TIME;
-	}
-
-	public void render(SpriteBatch batch) {
-
-		levelDecoration.render(batch);
-		player.render(batch);
-		
-		for(AbstractEnemy enemies : enemies)
-			enemies.render(batch);
-		
-		for (Bullet bullet: bullets)
-			bullet.render(batch);
-		
-		for (AbstractPowerup powerup : powerups)
-			powerup.render(batch);
-	}
-	
-	public void spawnPowerup(Vector2 spawnPosition){
-		if(rng.nextDouble() > 0.3) return;
-		AbstractPowerup powerup = powerupsPool.obtain();
-		powerup.setPower(rng.nextInt(4));
-		powerup.position.set(spawnPosition);
-		powerups.add(powerup);
 	}
 
 }

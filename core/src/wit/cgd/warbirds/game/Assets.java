@@ -34,7 +34,9 @@ public class Assets implements Disposable, AssetErrorListener {
 	public AssetAnimation			enemySimple;
 	public AssetAnimation			enemyNormal;
 	public AssetAnimation			enemyDifficult;
+	public AssetAnimation			boss;
 	public AssetAnimation			explosionBig;
+	public AssetAnimation			explosionLarge;
 	
 	public Asset				bullet;
 	public Asset				doubleBullet;
@@ -85,8 +87,10 @@ public class Assets implements Disposable, AssetErrorListener {
 		enemySimple = new AssetAnimation(atlas, "enemy_plane_green");
 		enemyNormal = new AssetAnimation(atlas, "enemy_plane_yellow");
 		enemyDifficult = new AssetAnimation(atlas, "enemy_plane_white");
+		boss = new AssetAnimation(atlas, "boss");
 		
 		explosionBig = new AssetAnimation(atlas, "explosion_big");
+		explosionLarge = new AssetAnimation(atlas, "explosion_large");
 		
 		levelDecoration = new AssetLevelDecoration(atlas);
 		shield = new Asset(atlas, "shield");

@@ -136,11 +136,12 @@ public class MenuScreen extends AbstractGameScreen{
     }
     
     private void onPlayerClicked(){
-    	game.setScreen(new GameScreen(game, 1));
+    	GamePreferences.instance.levelNumber = 1;
+    	game.setScreen(new GameScreen(game));
     }
     
     private void onContinueClicked(){
-    	game.setScreen(new GameScreen(game, GamePreferences.instance.levelNumber));
+    	game.setScreen(new GameScreen(game));
     }
     
     private void onOptionsClicked(){
