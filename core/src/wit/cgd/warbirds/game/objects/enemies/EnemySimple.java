@@ -25,23 +25,19 @@ public class EnemySimple extends AbstractEnemy{
 		state = State.ACTIVE;
 	}
 	
-	public void update(float deltaTime, Player player){
+	@Override
+	public void update(float deltaTime){
 		super.update(deltaTime);
 		if(health <= 0) return;
-		updateMotionX();
-		updateMotionY();
 		super.shoot();
 	}
 	
-	private void updateMotionX(){
+	@Override
+	protected void updateMotionX(){
 		if(position.x >= Constants.VIEWPORT_WIDTH/2 - 1f)
 			velocity.x = -2f;
 		else if (position.x <= -Constants.VIEWPORT_WIDTH/2 + 1f)
 			velocity.x = 2f;
-	}
-	
-	private void updateMotionY(){
-		velocity.y = -Constants.SCROLL_SPEED * (level.rng.nextFloat() + 0.25f);
 	}
 
 	@Override

@@ -162,11 +162,9 @@ public class WorldController extends InputAdapter {
 	}
 	
 	private void checkEnemyPlayerCollision(AbstractEnemy enemy){
-		boolean hitLeftSide = level.player.position.x < (enemy.position.x + enemy.dimension.x/2);
-		if(hitLeftSide) level.player.position.x -= 0.1f;
-		else level.player.position.x += 0.1f;
-		
-		level.player.health -= 0.1f;
+		enemy.health = 0;
+		if(level.player.shield > 0) level.player.shield -= 0.1f;
+		else level.player.health -= 0.1f;
 	}
 	
 	private void checkBulletPlayerCollision(Bullet bullet) {

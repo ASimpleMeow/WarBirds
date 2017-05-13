@@ -20,7 +20,7 @@ A [1942 game](https://en.wikipedia.org/wiki/1942_(video_game)) clone where the p
 + Three variation of AI enemy planes : 
     + Simple zig-zag pattern with continuous shooting
     + Locking in on players position and shooting
-    + Ambushing the player from the sides
+    + Flying in behind the player and ambushing him
 + Powerup drops from enemies : 
     + Health increase
     + Shield power to block enemy bullets

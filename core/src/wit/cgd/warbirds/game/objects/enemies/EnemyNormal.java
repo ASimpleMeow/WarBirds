@@ -23,11 +23,12 @@ public class EnemyNormal extends AbstractEnemy{
 		state = State.ACTIVE;
 	}
 	
-	public void update(float deltaTime, Player player){
+	@Override
+	public void update(float deltaTime){
 		super.update(deltaTime);
 		if(health <= 0) return;
-		super.turnTowards((player.position.y > position.y)? null : player.position);
-		super.moveTowards((player.position.y > position.y)? null : player.position);
+		super.turnTowards((level.player.position.y > position.y)? null : level.player.position);
+		super.moveTowards((level.player.position.y > position.y)? null : level.player.position);
 		super.shoot();
 	}
 

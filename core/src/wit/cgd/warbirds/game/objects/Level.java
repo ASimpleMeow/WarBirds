@@ -138,6 +138,8 @@ public class Level extends AbstractGameObject {
 			if(enemyDifficultLimit > 0 && rng.nextDouble() < 0.1){
 				newEnemy = enemyPools.enemyDifficultPool.obtain();
 				enemyDifficultLimit--;
+				y = start + 1  - rng.nextInt(2);
+				x = (rng.nextBoolean())? -Constants.VIEWPORT_WIDTH/2 + 1f : Constants.VIEWPORT_WIDTH/2 - 1f;
 			}else if(enemyNormalLimit > 0 && rng.nextDouble() < 0.4){
 				newEnemy = enemyPools.enemyNormalPool.obtain();
 				enemyNormalLimit--;
@@ -149,20 +151,10 @@ public class Level extends AbstractGameObject {
 			newEnemy.reset();
 			newEnemy.position.set(x,y);
 			enemies.add(newEnemy);
-			/*
-			AbstractEnemy newEnemy = enemyPools.enemyNormalPool.obtain();
-			if(newEnemy.level == null) newEnemy.resetLevel(level);
-			newEnemy.reset();
-			newEnemy.position.set(x,y);
-			enemies.add(newEnemy);
-			--enemyNormalLimit;*/
 		}
 		
-		for(AbstractEnemy enemy : enemies){
-			if(enemy.enemyType.equals("enemySimple")) ((EnemySimple) enemy).update(deltaTime, player);
-			else if(enemy.enemyType.equals("enemyNormal")) ((EnemyNormal) enemy).update(deltaTime, player);
-			else ((EnemyDifficult) enemy).update(deltaTime, player);
-		}
+		for(AbstractEnemy enemy : enemies)
+			enemy.update(deltaTime);
 		
 		for (Bullet bullet: bullets)
 			bullet.update(deltaTime);

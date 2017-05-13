@@ -33,6 +33,8 @@ public abstract class AbstractEnemy extends AbstractGameObject implements Poolab
 	@Override
 	public void update (float deltaTime) {
 		super.update(deltaTime);
+		updateMotionX();
+		updateMotionY();
 		timeShootDelay -= deltaTime;
 		if(health <= 0){
 			if(state == State.ACTIVE){
@@ -41,6 +43,12 @@ public abstract class AbstractEnemy extends AbstractGameObject implements Poolab
 				setAnimation(animation);
 			}
 		}
+	}
+	
+	protected void updateMotionX(){}
+	
+	protected void updateMotionY(){
+		velocity.y = -Constants.SCROLL_SPEED * (level.rng.nextFloat() + 0.25f);
 	}
 
 	public void shoot() {
