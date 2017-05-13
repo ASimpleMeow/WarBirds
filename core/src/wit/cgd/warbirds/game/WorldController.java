@@ -6,12 +6,15 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
 
 import wit.cgd.warbirds.game.objects.AbstractGameObject;
 import wit.cgd.warbirds.game.objects.AbstractGameObject.State;
 import wit.cgd.warbirds.game.objects.AbstractPowerup;
+import wit.cgd.warbirds.game.objects.Boss;
 import wit.cgd.warbirds.game.objects.Bullet;
 import wit.cgd.warbirds.game.objects.Level;
+import wit.cgd.warbirds.game.objects.Player;
 import wit.cgd.warbirds.game.objects.enemies.AbstractEnemy;
 import wit.cgd.warbirds.game.objects.enemies.EnemyDifficult;
 import wit.cgd.warbirds.game.objects.enemies.EnemyNormal;
@@ -29,6 +32,7 @@ public class WorldController extends InputAdapter {
 	public CameraHelper			cameraHelper;
 	public Level				level;
 	public int					levelNumber;
+	private boolean				finishLevel;
 	
 	private Rectangle			collisionObject1 = new Rectangle();
 	private Rectangle			collisionObject2 = new Rectangle();
@@ -42,6 +46,7 @@ public class WorldController extends InputAdapter {
 		Gdx.input.setInputProcessor(this);
 		level = EnemyPoolCollection.level;//new Level();
 		level.loadLevel(GamePreferences.instance.levelNumber);
+		finishLevel = false;
 		cameraHelper = new CameraHelper();
 		cameraHelper.setTarget(level);
 	}
@@ -52,6 +57,18 @@ public class WorldController extends InputAdapter {
 		handleGameInput(deltaTime);
 		cameraHelper.update(deltaTime);
 		level.update(deltaTime);
+		if(finishLevel)level.endLevel(deltaTime);
+		
+		if(level.boss != null && level.boss.state == AbstractGameObject.State.DEAD && !finishLevel){
+			level.enemies.clear();
+			finishLevel = true;
+		}
+		
+		if(level.levelEndTimer <= 0){
+			finishLevel = false;
+			level.loadLevel((level.levelNumber%8)+1);
+		}
+		
 		cullObjects();
 		testCollisions();
 	}
@@ -76,6 +93,7 @@ public class WorldController extends InputAdapter {
 		// cull enemies
 		for(int k=level.enemies.size; --k>=0;){
 			AbstractEnemy it = level.enemies.get(k);
+			if(it.enemyType.equals("boss")) continue;
 			if(it.state == AbstractGameObject.State.DEAD){
 				if(it.health <= 0){
 					level.player.score += it.score;
@@ -98,7 +116,6 @@ public class WorldController extends InputAdapter {
 		//cull powerups
 		for(int k=level.powerups.size; --k>=0;){
 			AbstractPowerup it = level.powerups.get(k);
-			System.out.println("!!!STATE ------"+it.state);
 			if (it.state == AbstractGameObject.State.DEAD) {
 				level.powerups.removeIndex(k);
 				level.powerupsPool.free(it);
@@ -164,7 +181,7 @@ public class WorldController extends InputAdapter {
 	}
 	
 	private void checkEnemyPlayerCollision(AbstractEnemy enemy){
-		enemy.health = 0;
+		if(!enemy.enemyType.equals("boss"))enemy.health = 0;
 		if(level.player.shield > 0) level.player.shield -= 0.1f;
 		else level.player.health -= 0.1f;
 	}
@@ -203,7 +220,7 @@ public class WorldController extends InputAdapter {
 
 	private void handleGameInput(float deltaTime) {
 		level.player.velocity.y = Constants.SCROLL_SPEED;
-		if(level.levelStartTimer > 0) return;
+		if(level.levelStartTimer > 0 || level.levelEndTimer != Constants.LEVEL_END_DELAY ) return;
 		
 		if (Gdx.input.isKeyPressed(Keys.A)) {
 			level.player.velocity.x = (float) (-Constants.PLANE_H_SPEED * ((level.player.extraSpeed)? 1.5 : 1));
@@ -217,7 +234,7 @@ public class WorldController extends InputAdapter {
 		} else if (Gdx.input.isKeyPressed(Keys.S)) {
 			level.player.velocity.y = (float) (Constants.PLANE_MIN_V_SPEED * ((level.player.extraSpeed)? 1.5 : 1));
 		}
-		if (Gdx.input.isKeyPressed(Keys.SPACE)) {
+		if (Gdx.input.isKeyPressed(Keys.SPACE) && !level.startBoss) {
 			level.player.shoot();
 		}
 	}

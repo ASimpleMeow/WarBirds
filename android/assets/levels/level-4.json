@@ -1,10 +1,10 @@
 {
 	// probably better to construct islands using a random formula (ie proceduraly generated)  but this
 	// is here to show how it could be done manually.
-	seed: 50,
+	seed: 112,
 	enemies: [
-		{	name: enemySimple,			limit: 10},
-		{	name: enemyNormal,			limit: 4},
-		{	name: enemyDifficult,		limit: 2}
+		{	name: enemySimple,			limit: 15},
+		{	name: enemyNormal,			limit: 7},
+		{	name: enemyDifficult,		limit: 3}
 	]
 }

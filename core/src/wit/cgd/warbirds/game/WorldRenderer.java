@@ -97,6 +97,9 @@ public class WorldRenderer implements Disposable {
 			renderGuiTextBig(batch, "BOSS START\n           "+(int)(worldController.level.levelBossTimer+1),
 					Constants.VIEWPORT_GUI_WIDTH,
 					Constants.VIEWPORT_GUI_HEIGHT/3);
+		
+		if(worldController.level.levelEndTimer != Constants.LEVEL_END_DELAY)
+			renderGuiTextBig(batch, "LEVEL COMPLETE", Constants.VIEWPORT_GUI_WIDTH-100, Constants.VIEWPORT_GUI_HEIGHT/3);
 			
 		//Render level number in the bottom left corner
 		renderGuiLevelNumber(batch);

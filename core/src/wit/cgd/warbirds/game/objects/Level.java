@@ -42,6 +42,7 @@ public class Level extends AbstractGameObject {
 	private String[] islands = {"islandBig","islandSmall","islandTiny"};
 	private float islandTimer;
 	public float levelStartTimer;
+	public float levelEndTimer;
 	public float levelBossTimer;
 	public boolean startBoss;
 	
@@ -91,7 +92,8 @@ public class Level extends AbstractGameObject {
 		// player
 		player = new Player(this);
 		player.position.set(0, 0);
-
+		
+		boss = null;
 		enemies = new Array<AbstractEnemy>();
 						
 		levelDecoration = new LevelDecoration(this);
@@ -100,13 +102,14 @@ public class Level extends AbstractGameObject {
 		velocity.y = Constants.SCROLL_SPEED;
 		state = State.ACTIVE;
 		levelStartTimer = Constants.LEVEL_START_DELAY;
+		levelEndTimer = Constants.LEVEL_END_DELAY;
 		levelBossTimer = Constants.LEVEL_BOSS_DELAY;
 		startBoss = false;
 	}
 	
 	public void loadLevel(int levelNumber){
-		init();
 		
+		init();
 		this.levelNumber = levelNumber;
 		// read and parse level map (form a json file)
 		String map = Gdx.files.internal(String.format("levels/level-%d.json",levelNumber)).readString();
@@ -142,9 +145,11 @@ public class Level extends AbstractGameObject {
 		
 		if(startBoss) levelBossTimer -= deltaTime;
 		
-		if(levelBossTimer <= 0 && boss == null){
+		if(levelBossTimer <= 0 && boss == null && startBoss){
 			boss = new Boss(this);
 			boss.position.set(0, end);
+			enemies.add(boss);
+			startBoss = false;
 		}
 		
 		if(levelStartTimer <= 0) spawnEnemy();
@@ -153,13 +158,17 @@ public class Level extends AbstractGameObject {
 		islandTimer -= deltaTime;
 		spawnIslands();
 		
-		if(boss != null) boss.update(deltaTime);
-		
 		for(AbstractEnemy enemy : enemies)
 			enemy.update(deltaTime);
 		
 		for (Bullet bullet: bullets)
 			bullet.update(deltaTime);
+	}
+	
+	public void endLevel(float deltaTime){
+		levelEndTimer -= deltaTime;
+		player.velocity.set(0,0);
+		player.position.set(0, end - 10);
 	}
 
 	public void render(SpriteBatch batch) {
@@ -167,10 +176,8 @@ public class Level extends AbstractGameObject {
 		levelDecoration.render(batch);
 		player.render(batch);
 		
-		if(boss != null) boss.render(batch);
-		
-		for(AbstractEnemy enemies : enemies)
-			enemies.render(batch);
+		for(AbstractEnemy enemy : enemies)
+			enemy.render(batch);
 		
 		for (Bullet bullet: bullets)
 			bullet.render(batch);

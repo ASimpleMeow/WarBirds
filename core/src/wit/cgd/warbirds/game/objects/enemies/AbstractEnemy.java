@@ -39,7 +39,8 @@ public abstract class AbstractEnemy extends AbstractGameObject implements Poolab
 		if(health <= 0){
 			if(state == State.ACTIVE){
 				state = State.DYING;
-				animation = Assets.instance.explosionBig.animation;
+				animation = (enemyType.equals("boss"))? 
+						Assets.instance.explosionLarge.animation : Assets.instance.explosionBig.animation;
 				setAnimation(animation);
 			}
 		}
@@ -86,6 +87,7 @@ public abstract class AbstractEnemy extends AbstractGameObject implements Poolab
 		else if (obj.y-position.y > 1) velocity.y = 2 * Constants.SCROLL_SPEED;
 		else velocity.y = 0;
 	}
+	
 	
 	public void render (SpriteBatch batch) {
 		
