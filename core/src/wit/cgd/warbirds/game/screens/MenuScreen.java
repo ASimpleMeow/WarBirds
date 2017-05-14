@@ -140,6 +140,7 @@ public class MenuScreen extends AbstractGameScreen{
     private void onPlayerClicked(){
     	AudioManager.instance.play(Assets.instance.sounds.click);
     	GamePreferences.instance.levelNumber = 1;
+    	GamePreferences.instance.save();
     	game.setScreen(new GameScreen(game));
     }
     

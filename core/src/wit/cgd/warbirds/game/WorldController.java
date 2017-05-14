@@ -253,6 +253,15 @@ public class WorldController extends InputAdapter {
 		if (Gdx.input.isKeyPressed(Keys.ENTER)) {
 			cameraHelper.setTarget(!cameraHelper.hasTarget() ? level : null);
 		}
+		
+		if(Gdx.input.isKeyJustPressed(Keys.NUM_1)) level.loadLevel(1);
+		if(Gdx.input.isKeyJustPressed(Keys.NUM_2)) level.loadLevel(2);
+		if(Gdx.input.isKeyJustPressed(Keys.NUM_3)) level.loadLevel(3);
+		if(Gdx.input.isKeyJustPressed(Keys.NUM_4)) level.loadLevel(4);
+		if(Gdx.input.isKeyJustPressed(Keys.NUM_5)) level.loadLevel(5);
+		if(Gdx.input.isKeyJustPressed(Keys.NUM_6)) level.loadLevel(6);
+		if(Gdx.input.isKeyJustPressed(Keys.NUM_7)) level.loadLevel(7);
+		if(Gdx.input.isKeyJustPressed(Keys.NUM_8)) level.loadLevel(8);
 
 		if (!cameraHelper.hasTarget()) {
 			// Camera Controls (move)
