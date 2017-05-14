@@ -1,13 +1,19 @@
 package wit.cgd.warbirds.game.objects;
 
-import wit.cgd.warbirds.game.util.Constants;
+/**
+ * @file        AbstractGameObject
+ * @author      Oleksandr Kononov 20071032
+ * @assignment  WarBirds
+ * @brief       Abstract object in the game used as a super class for all
+ * 				other game objects
+ *
+ * @notes       
+ */
 
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.utils.Pool.Poolable;
 
 public abstract class AbstractGameObject {
 
@@ -19,9 +25,6 @@ public abstract class AbstractGameObject {
 	public Vector2		scale;
 	public float		rotation;
 	public Vector2		velocity;
-	public Vector2		terminalVelocity;
-	public Vector2		friction;
-	public Vector2		acceleration;
 	
 	public float		health;
 	public int 			score;
@@ -47,9 +50,6 @@ public abstract class AbstractGameObject {
 		scale = new Vector2(1, 1);
 		rotation = 0;
 		velocity = new Vector2();
-		terminalVelocity = new Vector2(1, 1);
-		friction = new Vector2();
-		acceleration = new Vector2();
 		state = State.ASLEEP;
 	}
 
@@ -76,7 +76,7 @@ public abstract class AbstractGameObject {
 
 	public abstract void render(SpriteBatch batch);
 	
-	public void resetLevel(Level level){
+	public void setLevel(Level level){
 		this.level = level;
 	}
 	

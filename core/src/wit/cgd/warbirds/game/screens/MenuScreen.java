@@ -1,5 +1,14 @@
 package wit.cgd.warbirds.game.screens;
 
+/**
+ * @file        MenuScreen
+ * @author      Oleksandr Kononov 20071032
+ * @assignment  WarBirds
+ * @brief       The Menu for the game - first screen to be shown
+ *
+ * @notes       
+ */
+
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
@@ -24,6 +33,7 @@ import wit.cgd.warbirds.game.util.GamePreferences;
 
 public class MenuScreen extends AbstractGameScreen{
 	
+	@SuppressWarnings("unused")
 	private static final String TAG	= MenuScreen.class.getName();
 	
 	private Stage			stage;
@@ -77,6 +87,9 @@ public class MenuScreen extends AbstractGameScreen{
     
     @Override public void pause() {}
     
+    /**
+     * Rebuild the stage again
+     */
     private void rebuildStage(){
     	skin = new Skin(Gdx.files.internal(Constants.SKIN_UI), new TextureAtlas(Constants.TEXTURE_ATLAS_UI));
     	GamePreferences.instance.load();
@@ -158,6 +171,10 @@ public class MenuScreen extends AbstractGameScreen{
     	loadOptions();
     }
     
+    /**
+     * Options like Sound on/off, Sound volume, Music on/off, Music volume 
+     * and game difficulty
+     */
     private Table buildOptionsWindowLayer(){
     	
     	//Create instance of window

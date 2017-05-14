@@ -1,20 +1,25 @@
 package wit.cgd.warbirds.game;
 
+/**
+ * @file        WorldController
+ * @author      Oleksandr Kononov 20071032
+ * @assignment  WarBirds
+ * @brief       Controls the logic for the game
+ *
+ * @notes       
+ */
+
 import com.badlogic.gdx.Application.ApplicationType;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.math.Vector2;
 
 import wit.cgd.warbirds.game.objects.AbstractGameObject;
-import wit.cgd.warbirds.game.objects.AbstractGameObject.State;
 import wit.cgd.warbirds.game.objects.AbstractPowerup;
-import wit.cgd.warbirds.game.objects.Boss;
 import wit.cgd.warbirds.game.objects.Bullet;
 import wit.cgd.warbirds.game.objects.Level;
-import wit.cgd.warbirds.game.objects.Player;
 import wit.cgd.warbirds.game.objects.enemies.AbstractEnemy;
 import wit.cgd.warbirds.game.objects.enemies.EnemyDifficult;
 import wit.cgd.warbirds.game.objects.enemies.EnemyNormal;
@@ -27,8 +32,10 @@ import wit.cgd.warbirds.game.util.GamePreferences;
 
 public class WorldController extends InputAdapter {
 
+	@SuppressWarnings("unused")
 	private static final String	TAG	= WorldController.class.getName();
 
+	@SuppressWarnings("unused")
 	private Game				game;
 	public CameraHelper			cameraHelper;
 	public Level				level;
@@ -38,6 +45,7 @@ public class WorldController extends InputAdapter {
 	public float				width;
 	public float				height;
 	
+	//Collision detection rectangles
 	private Rectangle			collisionObject1 = new Rectangle();
 	private Rectangle			collisionObject2 = new Rectangle();
 
@@ -130,26 +138,31 @@ public class WorldController extends InputAdapter {
 		}
 	}
 
-	// Collision detection methods
+	/**
+	 * Collision Detection methods
+	 */
 	private void testCollisions(){
 		collisionObject1.set(level.player.position.x, level.player.position.y,level.player.dimension.x,
 				level.player.dimension.y);
 		
+		//Check all bullets <-> Player
 		for(Bullet bullet : level.bullets){
 			collisionObject2.set(bullet.position.x, bullet.position.y, bullet.dimension.x,
 					bullet.dimension.y);
 			if (!collisionObject1.overlaps(collisionObject2)) continue;
 			if(bullet.isSourcePlayer) continue;
-			checkBulletPlayerCollision(bullet);
+			handleBulletPlayerCollision(bullet);
 		}
 		
+		//Check all powerups <-> Player
 		for(AbstractPowerup powerup : level.powerups){
 			collisionObject2.set(powerup.position.x, powerup.position.y, powerup.dimension.x,
 					powerup.dimension.y);
 			if (!collisionObject1.overlaps(collisionObject2)) continue;
-			checkPlayerPowerCollision(powerup);
+			handlePlayerPowerCollision(powerup);
 		}
 		
+		//For all enemies check : Enemy <-> Player , Enemy <-> Bullet and Enemy <-> Enemy
 		for(AbstractEnemy currentEnemy : level.enemies){
 			collisionObject1.set(level.player.position.x, level.player.position.y,level.player.dimension.x,
 					level.player.dimension.y);
@@ -158,7 +171,7 @@ public class WorldController extends InputAdapter {
 					currentEnemy.dimension.y);
 			
 			if(collisionObject1.overlaps(collisionObject2)){
-				checkEnemyPlayerCollision(currentEnemy);
+				handleEnemyPlayerCollision(currentEnemy);
 				continue;
 			}
 			
@@ -167,7 +180,7 @@ public class WorldController extends InputAdapter {
 						bullet.dimension.y);
 				if (!collisionObject2.overlaps(collisionObject1)) continue;
 				if(!bullet.isSourcePlayer) continue;
-				checkBulletEnemyCollision(currentEnemy, bullet);
+				handleBulletEnemyCollision(currentEnemy, bullet);
 			}
 			
 			for(int i = 0; i < level.enemies.size; ++i){
@@ -175,35 +188,50 @@ public class WorldController extends InputAdapter {
 				collisionObject1.set(level.enemies.get(i).position.x, level.enemies.get(i).position.y,
 						level.enemies.get(i).dimension.x, level.enemies.get(i).dimension.y);
 				if(!collisionObject2.overlaps(collisionObject1)) continue;
-				checkEnemyEnemyCollision(currentEnemy, level.enemies.get(i));
+				handleEnemyEnemyCollision(currentEnemy, level.enemies.get(i));
 			}
 		}
 	}
 	
-	private void checkBulletEnemyCollision(AbstractEnemy enemy, Bullet bullet) {
+	/**
+	 * Handle Bullet <-> Enemy Collision
+	 */
+	private void handleBulletEnemyCollision(AbstractEnemy enemy, Bullet bullet) {
 		enemy.health -= Constants.BULLET_DAMAGE;
 		bullet.state = AbstractGameObject.State.DYING;
 	}
 	
-	private void checkEnemyPlayerCollision(AbstractEnemy enemy){
+	/**
+	 * Handle Enemy <-> Player Collision
+	 */
+	private void handleEnemyPlayerCollision(AbstractEnemy enemy){
 		if(!enemy.enemyType.equals("boss"))enemy.health = 0;
 		if(level.player.shield > 0) level.player.shield -= 0.1f;
 		else level.player.health -= 0.1f;
 	}
 	
-	private void checkBulletPlayerCollision(Bullet bullet) {
+	/**
+	 * Handle Bullet <-> Player Collision
+	 */
+	private void handleBulletPlayerCollision(Bullet bullet) {
 		if(level.player.shield > 0) level.player.shield -= Constants.BULLET_DAMAGE;
 		else level.player.health -= Constants.BULLET_DAMAGE;
 		bullet.state = AbstractGameObject.State.DEAD;
 	}
 	
-	private void checkEnemyEnemyCollision(AbstractEnemy current, AbstractEnemy other) {
+	/**
+	 * Handle Enemy <-> Enemy Collision
+	 */
+	private void handleEnemyEnemyCollision(AbstractEnemy current, AbstractEnemy other) {
 		boolean hitLeftSide = current.position.x < (other.position.x + other.dimension.x/2);
 		if(hitLeftSide) current.position.x = other.position.x - other.dimension.x;
 		else current.position.x = other.position.x + other.dimension.x;
 	}
 	
-	private void checkPlayerPowerCollision(AbstractPowerup power){
+	/**
+	 * Handle Player <-> PowerUp Collision
+	 */
+	private void handlePlayerPowerCollision(AbstractPowerup power){
 		if(level.player.isDead()) return;
 		power.executePowerup(level.player);
 		AudioManager.instance.play(Assets.instance.sounds.pickup);
@@ -225,6 +253,9 @@ public class WorldController extends InputAdapter {
 		return false;
 	}
 
+	/**
+	 * Game input for Desktop
+	 */
 	private void handleGameInput(float deltaTime) {
 		level.player.velocity.y = Constants.SCROLL_SPEED;
 		if(!level.player.canMove() || Gdx.app.getType() != ApplicationType.Desktop) return;
@@ -290,6 +321,9 @@ public class WorldController extends InputAdapter {
 		cameraHelper.setPosition(x, y);
 	}
 
+	/**
+	 * Game input for non Desktop
+	 */
 	@Override
 	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
 		if(!level.player.canMove() || Gdx.app.getType() == ApplicationType.Desktop) return false;

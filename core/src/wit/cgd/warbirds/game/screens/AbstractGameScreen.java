@@ -1,5 +1,14 @@
 package wit.cgd.warbirds.game.screens;
 
+/**
+ * @file        AbstractGameScreen
+ * @author      Oleksandr Kononov 20071032
+ * @assignment  WarBirds
+ * @brief       Abstract super class for the screens in the game
+ *
+ * @notes       
+ */
+
 import wit.cgd.warbirds.game.Assets;
 import wit.cgd.warbirds.game.util.Constants;
 

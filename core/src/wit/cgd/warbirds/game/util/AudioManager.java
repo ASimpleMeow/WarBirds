@@ -1,5 +1,14 @@
 package wit.cgd.warbirds.game.util;
 
+/**
+ * @file        AudioManager
+ * @author      Oleksandr Kononov 20071032
+ * @assignment  WarBirds
+ * @brief       Handles all sound and music in the game
+ *
+ * @notes       
+ */
+
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 

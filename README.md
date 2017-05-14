@@ -35,6 +35,7 @@ A [1942 game](https://en.wikipedia.org/wiki/1942_(video_game)) clone where the p
 	+ Continue playing the highest level you reached before
 	+ If Start is pressed on the Menu screen, then this will reset to 1
 + For debugging purposes you can press keys 1 - 8 to skip the that level
++ Boss also dropps random powerups on the way to help the player
 
 ---
 

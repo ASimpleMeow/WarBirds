@@ -1,8 +1,17 @@
 package wit.cgd.warbirds.game.objects.enemies;
 
+/**
+ * @file        EnemyNormal
+ * @author      Oleksandr Kononov 20071032
+ * @assignment  WarBirds
+ * @brief       Normal variation of enemy - The turn and move towards
+ * 				the player, shooting him and trying to kamikaze into the player
+ *
+ * @notes       
+ */
+
 import wit.cgd.warbirds.game.Assets;
 import wit.cgd.warbirds.game.objects.Level;
-import wit.cgd.warbirds.game.objects.Player;
 import wit.cgd.warbirds.game.util.Constants;
 
 public class EnemyNormal extends AbstractEnemy{

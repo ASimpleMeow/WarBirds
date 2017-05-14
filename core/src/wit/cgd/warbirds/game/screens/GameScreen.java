@@ -1,15 +1,25 @@
 package wit.cgd.warbirds.game.screens;
 
+/**
+ * @file        GameScreen
+ * @author      Oleksandr Kononov 20071032
+ * @assignment  WarBirds
+ * @brief       The screen where the actual games takes place in,
+ * 				updates the WorldController and WorldRenderer
+ *
+ * @notes       
+ */
+
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 
 import wit.cgd.warbirds.game.WorldController;
 import wit.cgd.warbirds.game.WorldRenderer;
-import wit.cgd.warbirds.game.util.GamePreferences;
 
 public class GameScreen extends AbstractGameScreen {
 
+	@SuppressWarnings("unused")
 	private static final String	TAG	= GameScreen.class.getName();
 
 	private WorldController		worldController;

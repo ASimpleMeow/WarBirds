@@ -1,19 +1,25 @@
 package wit.cgd.warbirds.game.objects.enemies;
 
+/**
+ * @file        AbstractEnemy
+ * @author      Oleksandr Kononov 20071032
+ * @assignment  WarBirds
+ * @brief       Abstract Enemy Super class shared by all enemies
+ *
+ * @notes       
+ */
+
 import wit.cgd.warbirds.game.Assets;
 import wit.cgd.warbirds.game.objects.AbstractGameObject;
 import wit.cgd.warbirds.game.objects.Bullet;
 import wit.cgd.warbirds.game.objects.Level;
 import wit.cgd.warbirds.game.objects.Player;
-import wit.cgd.warbirds.game.objects.AbstractGameObject.State;
 import wit.cgd.warbirds.game.util.AudioManager;
 import wit.cgd.warbirds.game.util.Constants;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Pool.Poolable;
 
@@ -68,6 +74,9 @@ public abstract class AbstractEnemy extends AbstractGameObject implements Poolab
 		AudioManager.instance.play(Assets.instance.sounds.gun1);
 	}
 	
+	/**
+	 * Rotate towards the position
+	 */
 	public void turnTowards(Vector2 obj){
 		if(obj == null){
 			if(rotation > 0) rotation -= 2;
@@ -79,6 +88,9 @@ public abstract class AbstractEnemy extends AbstractGameObject implements Poolab
 	    rotation = angle + 90;
 	}
 	
+	/**
+	 * Moves towards the position
+	 */
 	public void moveTowards(Vector2 obj){
 		velocity.y = -Constants.SCROLL_SPEED;
 		velocity.x = 0;
@@ -91,7 +103,7 @@ public abstract class AbstractEnemy extends AbstractGameObject implements Poolab
 		else velocity.y = 0;
 	}
 	
-	
+	@Override
 	public void render (SpriteBatch batch) {
 		
 		region = animation.getKeyFrame(stateTime, true);

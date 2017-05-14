@@ -1,5 +1,14 @@
 package wit.cgd.warbirds.game.util;
 
+/**
+ * @file        Constants
+ * @author      Oleksandr Kononov 20071032
+ * @assignment  WarBirds
+ * @brief       All Constants used in the game
+ *
+ * @notes       
+ */
+
 public class Constants {
 
 	// Game world dimensions

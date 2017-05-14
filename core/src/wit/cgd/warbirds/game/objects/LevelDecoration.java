@@ -1,5 +1,14 @@
 package wit.cgd.warbirds.game.objects;
 
+/**
+ * @file        LevelDecoration
+ * @author      Oleksandr Kononov 20071032
+ * @assignment  WarBirds
+ * @brief       Decorations - Islands and Water in the level
+ *
+ * @notes       
+ */
+
 import wit.cgd.warbirds.game.Assets;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -54,7 +63,6 @@ public class LevelDecoration extends AbstractGameObject {
 	@Override
 	public void render(SpriteBatch batch) {
 		TextureRegion region = water;
-		int t =  (int) (Constants.VIEWPORT_HEIGHT*scale.x/scale.y);
 		
 		// water
 		for (int k=(int) level.start; k<level.end; ++k) 
@@ -70,17 +78,7 @@ public class LevelDecoration extends AbstractGameObject {
 			region = island.region;
 			if (island.position.y<level.start || island.position.y>level.end) continue;
 			island.render(batch);
-			/*batch.draw(region.getTexture(), 
-					island.position.x-island.origin.x, island.position.y-island.origin.y, 
-					island.origin.x, island.origin.y, 
-					1.1f, 1.1f, 
-					1, 1, island.rotation, 
-					region.getRegionX(), region.getRegionY(),
-					region.getRegionWidth(), region.getRegionHeight(), false, false);*/
 		}
-		
-		// islands
-	
 	}
 
 	public void add(String name, float x, float y, float scale, float rotation) {

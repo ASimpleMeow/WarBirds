@@ -1,8 +1,17 @@
 package wit.cgd.warbirds.game.objects.enemies;
 
+/**
+ * @file        EnemyDifficult
+ * @author      Oleksandr Kononov 20071032
+ * @assignment  WarBirds
+ * @brief       Difficult variation of enemies who spawn behind the player
+ * 				move in front of the player, turn around and shoot - Ambush style
+ *
+ * @notes       
+ */
+
 import wit.cgd.warbirds.game.Assets;
 import wit.cgd.warbirds.game.objects.Level;
-import wit.cgd.warbirds.game.objects.Player;
 import wit.cgd.warbirds.game.util.Constants;
 
 public class EnemyDifficult extends AbstractEnemy{

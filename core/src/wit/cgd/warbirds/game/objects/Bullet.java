@@ -1,10 +1,17 @@
 package wit.cgd.warbirds.game.objects;
 
+/**
+ * @file        Bullet
+ * @author      Oleksandr Kononov 20071032
+ * @assignment  WarBirds
+ * @brief       Bullet object in the game - used for damage dealing
+ *
+ * @notes       
+ */
+
 import wit.cgd.warbirds.game.Assets;
-import wit.cgd.warbirds.game.util.AudioManager;
 import wit.cgd.warbirds.game.util.Constants;
 
-import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Pool.Poolable;

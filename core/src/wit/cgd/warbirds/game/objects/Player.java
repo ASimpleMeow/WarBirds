@@ -1,7 +1,15 @@
 package wit.cgd.warbirds.game.objects;
 
+/**
+ * @file        Player
+ * @author      Oleksandr Kononov 20071032
+ * @assignment  WarBirds
+ * @brief       The player for the game
+ *
+ * @notes       
+ */
+
 import wit.cgd.warbirds.game.Assets;
-import wit.cgd.warbirds.game.objects.AbstractGameObject.State;
 import wit.cgd.warbirds.game.util.AudioManager;
 import wit.cgd.warbirds.game.util.Constants;
 

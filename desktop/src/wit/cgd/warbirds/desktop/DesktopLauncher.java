@@ -1,5 +1,14 @@
 package wit.cgd.warbirds.desktop;
 
+/**
+ * @file        DesktopLauncher
+ * @author      Oleksandr Kononov 20071032
+ * @assignment  WarBirds
+ * @brief       Launcher for the desktop part of the game
+ *
+ * @notes       
+ */
+
 import wit.cgd.warbirds.WarBirds;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;

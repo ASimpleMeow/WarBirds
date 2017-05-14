@@ -1,8 +1,17 @@
 package wit.cgd.warbirds.game.objects.enemies;
 
+/**
+ * @file        EnemySimple
+ * @author      Oleksandr Kononov 20071032
+ * @assignment  WarBirds
+ * @brief       Simple variation of the enemy - Simply zig-zag downwards
+ * 				and shooting
+ *
+ * @notes       
+ */
+
 import wit.cgd.warbirds.game.Assets;
 import wit.cgd.warbirds.game.objects.Level;
-import wit.cgd.warbirds.game.objects.Player;
 import wit.cgd.warbirds.game.util.Constants;
 
 public class EnemySimple extends AbstractEnemy{

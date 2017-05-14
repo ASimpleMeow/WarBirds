@@ -1,5 +1,15 @@
 package wit.cgd.warbirds.game;
 
+/**
+ * @file        Assets
+ * @author      Oleksandr Kononov 20071032
+ * @assignment  WarBirds
+ * @brief       Contains all Assets used in the game - 
+ * 				Textures, Animations, Fonts, Sounds and Music
+ *
+ * @notes       
+ */
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.assets.AssetErrorListener;
@@ -30,13 +40,13 @@ public class Assets implements Disposable, AssetErrorListener {
 	public AssetSounds			sounds;
 	public AssetMusic			music;
 
-	public AssetAnimation			player;
-	public AssetAnimation			enemySimple;
-	public AssetAnimation			enemyNormal;
-	public AssetAnimation			enemyDifficult;
-	public AssetAnimation			boss;
-	public AssetAnimation			explosionBig;
-	public AssetAnimation			explosionLarge;
+	public AssetAnimation		player;
+	public AssetAnimation		enemySimple;
+	public AssetAnimation		enemyNormal;
+	public AssetAnimation		enemyDifficult;
+	public AssetAnimation		boss;
+	public AssetAnimation		explosionBig;
+	public AssetAnimation		explosionLarge;
 	
 	public Asset				bullet;
 	public Asset				doubleBullet;
@@ -81,6 +91,7 @@ public class Assets implements Disposable, AssetErrorListener {
 		for (Texture t : atlas.getTextures())
 			t.setFilter(TextureFilter.Linear, TextureFilter.Linear);
 
+		//Create fonts
 		fonts = new AssetFonts();
 
 		// create game resource objects

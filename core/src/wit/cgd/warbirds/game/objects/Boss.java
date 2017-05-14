@@ -1,12 +1,17 @@
 package wit.cgd.warbirds.game.objects;
 
-import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.math.MathUtils;
+/**
+ * @file        Boss
+ * @author      Oleksandr Kononov 20071032
+ * @assignment  WarBirds
+ * @brief       The boss of each level
+ *
+ * @notes       Although it has simple movement similar to that of 
+ * 				EnemySimple, it shoots two bullets at faster intervals and 
+ * 				has more health
+ */
 
 import wit.cgd.warbirds.game.Assets;
-import wit.cgd.warbirds.game.objects.AbstractGameObject.State;
 import wit.cgd.warbirds.game.objects.enemies.AbstractEnemy;
 import wit.cgd.warbirds.game.util.AudioManager;
 import wit.cgd.warbirds.game.util.Constants;

@@ -1,5 +1,15 @@
 package wit.cgd.warbirds.game.objects;
 
+/**
+ * @file        Level
+ * @author      Oleksandr Kononov 20071032
+ * @assignment  WarBirds
+ * @brief       Level object - Where all the objects are spawned in,
+ * 				and handled
+ *
+ * @notes       
+ */
+
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -9,15 +19,10 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
-import com.badlogic.gdx.utils.JsonWriter.OutputType;
 import com.badlogic.gdx.utils.Pool;
 
 import wit.cgd.warbirds.game.Assets;
-import wit.cgd.warbirds.game.objects.AbstractGameObject.State;
 import wit.cgd.warbirds.game.objects.enemies.AbstractEnemy;
-import wit.cgd.warbirds.game.objects.enemies.EnemyDifficult;
-import wit.cgd.warbirds.game.objects.enemies.EnemyNormal;
-import wit.cgd.warbirds.game.objects.enemies.EnemySimple;
 import wit.cgd.warbirds.game.util.AudioManager;
 import wit.cgd.warbirds.game.util.Constants;
 import wit.cgd.warbirds.game.util.EnemyPoolCollection;
@@ -30,7 +35,7 @@ public class Level extends AbstractGameObject {
 	public Player				player	= null;
 	public Boss					boss = null;
 	public LevelDecoration		levelDecoration;
-	public Random				rng;
+	public Random				rng;			//Random Number Generator
 	public Array<AbstractEnemy>	enemies;
 	public float				start;
 	public float				end;
@@ -40,14 +45,16 @@ public class Level extends AbstractGameObject {
 	public int					enemySimpleLimit;
 	public int					enemyNormalLimit;
 	public int					enemyDifficultLimit;
-	private int					enemySpawnLimit;
+	private int					enemySpawnLimit;	//Amount of enemies to spawn in current screen
 	
 	private String[] islands = {"islandBig","islandSmall","islandTiny"};
+	public boolean startBoss;
+	
+	//Timers
 	private float islandTimer;
 	public float levelStartTimer;
 	public float levelEndTimer;
 	public float levelBossTimer;
-	public boolean startBoss;
 	
 	private final float ISLAND_DELAY_TIME = 1.2f;
 	
@@ -112,6 +119,9 @@ public class Level extends AbstractGameObject {
 		enemySpawnLimit = GamePreferences.instance.enemySpawnLimit;
 	}
 	
+	/**
+	 * Load the level using the given levelNumber - using level JSON files
+	 */
 	public void loadLevel(int levelNumber){
 		
 		init();
@@ -142,6 +152,7 @@ public class Level extends AbstractGameObject {
 		}
 	}
 
+	@Override
 	public void update(float deltaTime) {
 
 		super.update(deltaTime);
@@ -185,6 +196,7 @@ public class Level extends AbstractGameObject {
 		player.position.set(0, end - 10);
 	}
 
+	@Override
 	public void render(SpriteBatch batch) {
 
 		levelDecoration.render(batch);
@@ -200,6 +212,9 @@ public class Level extends AbstractGameObject {
 			powerup.render(batch);
 	}
 	
+	/**
+	 * Spawn powerup at given position
+	 */
 	public void spawnPowerup(Vector2 spawnPosition){
 		if(rng.nextDouble() > 0.3) return;
 		AbstractPowerup powerup = powerupsPool.obtain();
@@ -208,6 +223,9 @@ public class Level extends AbstractGameObject {
 		powerups.add(powerup);
 	}
 	
+	/**
+	 * Spawn x number (spawn limit) of enemies using rng and within their spawn limit
+	 */
 	private void spawnEnemy(){
 		while(enemies.size < enemySpawnLimit){
 			float x = rng.nextInt(((int)Constants.VIEWPORT_WIDTH))*2 - Constants.VIEWPORT_WIDTH - 0.5f;
@@ -226,13 +244,16 @@ public class Level extends AbstractGameObject {
 				newEnemy = enemyPools.enemySimplePool.obtain();
 				enemySimpleLimit--;
 			}else break;
-			if(newEnemy.level == null) newEnemy.resetLevel(level);
+			if(newEnemy.level == null) newEnemy.setLevel(level);
 			newEnemy.reset();
 			newEnemy.position.set(x,y);
 			enemies.add(newEnemy);
 		}
 	}
 	
+	/**
+	 * Spawn semi-random islands
+	 */
 	private void spawnIslands(){
 		if(rng.nextDouble() < 0.5) return;
 		if(islandTimer > 0) return;

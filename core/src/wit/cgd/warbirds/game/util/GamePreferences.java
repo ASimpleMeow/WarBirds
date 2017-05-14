@@ -1,5 +1,15 @@
 package wit.cgd.warbirds.game.util;
 
+/**
+ * @file        GamePreferences
+ * @author      Oleksandr Kononov 20071032
+ * @assignment  WarBirds
+ * @brief       All preferences in the game -
+ * 				Sound, Music and Difficulty settings
+ *
+ * @notes       
+ */
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.math.MathUtils;

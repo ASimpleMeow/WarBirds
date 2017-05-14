@@ -1,4 +1,12 @@
 package wit.cgd.warbirds.game;
+/**
+ * @file        WorldRenderer
+ * @author      Oleksandr Kononov 20071032
+ * @assignment  WarBirds
+ * @brief       Renders everything in the game
+ *
+ * @notes       
+ */
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -6,12 +14,12 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Disposable;
 import wit.cgd.warbirds.game.util.Constants;
 
 public class WorldRenderer implements Disposable {
 
+	@SuppressWarnings("unused")
 	private static final String	TAG	= WorldRenderer.class.getName();
 
 	public OrthographicCamera	camera;
@@ -70,6 +78,9 @@ public class WorldRenderer implements Disposable {
 		renderGui(batch);
 	}
 	
+	/**
+	 * Render GUI on screen such as Texts, Health and Shield bars
+	 */
 	private void renderGui(SpriteBatch batch){
 
 		//Render green (red when low) health bar

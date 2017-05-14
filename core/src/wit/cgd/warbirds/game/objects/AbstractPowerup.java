@@ -1,11 +1,19 @@
 package wit.cgd.warbirds.game.objects;
+/**
+ * @file        AbstractPowerup
+ * @author      Oleksandr Kononov 20071032
+ * @assignment  WarBirds
+ * @brief       Abstract power up for the player, it's abstract since it can
+ * 				execute any power up in the game
+ *
+ * @notes       
+ */
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Pool.Poolable;
 
 import wit.cgd.warbirds.game.Assets;
-import wit.cgd.warbirds.game.objects.AbstractGameObject.State;
 import wit.cgd.warbirds.game.util.Constants;
 
 public class AbstractPowerup extends AbstractGameObject implements Poolable{
@@ -54,8 +62,8 @@ public class AbstractPowerup extends AbstractGameObject implements Poolable{
 			player.health += ((player.health+5f) <= Constants.PlAYER_HEALTH)?
 					5f : (Constants.PlAYER_HEALTH - player.health);
 			break;
-		case 3:
-			player.shield = Constants.PLAYER_SHIELD;		//Shield powerup
+		case 3:						//Shield powerup
+			player.shield = Constants.PLAYER_SHIELD;
 			break;
 		}
 		player.score += 5;
