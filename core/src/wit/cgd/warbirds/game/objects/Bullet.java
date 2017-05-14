@@ -1,6 +1,7 @@
 package wit.cgd.warbirds.game.objects;
 
 import wit.cgd.warbirds.game.Assets;
+import wit.cgd.warbirds.game.util.AudioManager;
 import wit.cgd.warbirds.game.util.Constants;
 
 import com.badlogic.gdx.graphics.g2d.Animation;

@@ -19,6 +19,7 @@ import wit.cgd.warbirds.game.objects.enemies.AbstractEnemy;
 import wit.cgd.warbirds.game.objects.enemies.EnemyDifficult;
 import wit.cgd.warbirds.game.objects.enemies.EnemyNormal;
 import wit.cgd.warbirds.game.objects.enemies.EnemySimple;
+import wit.cgd.warbirds.game.util.AudioManager;
 import wit.cgd.warbirds.game.util.CameraHelper;
 import wit.cgd.warbirds.game.util.Constants;
 import wit.cgd.warbirds.game.util.EnemyPoolCollection;
@@ -31,8 +32,11 @@ public class WorldController extends InputAdapter {
 	private Game				game;
 	public CameraHelper			cameraHelper;
 	public Level				level;
-	public int					levelNumber;
 	private boolean				finishLevel;
+	
+	public float				viewportWidth;
+	public float				width;
+	public float				height;
 	
 	private Rectangle			collisionObject1 = new Rectangle();
 	private Rectangle			collisionObject2 = new Rectangle();
@@ -44,7 +48,7 @@ public class WorldController extends InputAdapter {
 
 	private void init() {
 		Gdx.input.setInputProcessor(this);
-		level = EnemyPoolCollection.level;//new Level();
+		level = EnemyPoolCollection.level;
 		level.loadLevel(GamePreferences.instance.levelNumber);
 		finishLevel = false;
 		cameraHelper = new CameraHelper();
@@ -54,10 +58,10 @@ public class WorldController extends InputAdapter {
 
 	public void update(float deltaTime) {
 		handleDebugInput(deltaTime);
-		handleGameInput(deltaTime);
+		if(!level.player.isDead()) handleGameInput(deltaTime);
 		cameraHelper.update(deltaTime);
 		level.update(deltaTime);
-		if(finishLevel)level.endLevel(deltaTime);
+		if(finishLevel || level.player.isDead())level.endLevel(deltaTime);
 		
 		if(level.boss != null && level.boss.state == AbstractGameObject.State.DEAD && !finishLevel){
 			level.enemies.clear();
@@ -66,7 +70,8 @@ public class WorldController extends InputAdapter {
 		
 		if(level.levelEndTimer <= 0){
 			finishLevel = false;
-			level.loadLevel((level.levelNumber%8)+1);
+			if(level.player.isDead()) level.loadLevel(level.levelNumber);
+			else level.loadLevel((level.levelNumber%8)+1);
 		}
 		
 		cullObjects();
@@ -199,7 +204,9 @@ public class WorldController extends InputAdapter {
 	}
 	
 	private void checkPlayerPowerCollision(AbstractPowerup power){
+		if(level.player.isDead()) return;
 		power.executePowerup(level.player);
+		AudioManager.instance.play(Assets.instance.sounds.pickup);
 		power.state = AbstractGameObject.State.DEAD;
 	}
 	
@@ -220,7 +227,7 @@ public class WorldController extends InputAdapter {
 
 	private void handleGameInput(float deltaTime) {
 		level.player.velocity.y = Constants.SCROLL_SPEED;
-		if(level.levelStartTimer > 0 || level.levelEndTimer != Constants.LEVEL_END_DELAY ) return;
+		if(!level.player.canMove() || Gdx.app.getType() != ApplicationType.Desktop) return;
 		
 		if (Gdx.input.isKeyPressed(Keys.A)) {
 			level.player.velocity.x = (float) (-Constants.PLANE_H_SPEED * ((level.player.extraSpeed)? 1.5 : 1));
@@ -229,6 +236,7 @@ public class WorldController extends InputAdapter {
 		} else {
 			level.player.velocity.x = 0;
 		}
+		
 		if (Gdx.input.isKeyPressed(Keys.W)) {
 			level.player.velocity.y = (float) (Constants.PLANE_MAX_V_SPEED * ((level.player.extraSpeed)? 1.5 : 1));
 		} else if (Gdx.input.isKeyPressed(Keys.S)) {
@@ -275,8 +283,26 @@ public class WorldController extends InputAdapter {
 
 	@Override
 	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-
-		// TODO - implement touch pad type controls
+		if(!level.player.canMove() || Gdx.app.getType() == ApplicationType.Desktop) return false;
+		
+		float x = (float) ((viewportWidth * (screenX - 0.5 * width) / width) + 1);
+		if (x < level.player.position.x) {
+			level.player.velocity.x = (float) (-Constants.PLANE_H_SPEED * ((level.player.extraSpeed)? 1.5 : 1));
+		} else if (x > level.player.position.x) {
+			level.player.velocity.x = (float) (Constants.PLANE_H_SPEED * ((level.player.extraSpeed)? 1.5 : 1));
+		} else {
+			level.player.velocity.x = 0;
+		}
+		level.player.position.y = level.start + 4;
+		level.player.shoot();
+		return true;
+	}
+	
+	@Override
+	public boolean touchDragged(int screenX, int screenY, int pointer){
+		if(!level.player.canMove() || Gdx.app.getType() == ApplicationType.Desktop) return false;
+		touchDown(screenX, screenY, pointer, 0);
+		level.player.shoot();
 		return true;
 	}
 

@@ -8,6 +8,7 @@ import com.badlogic.gdx.math.MathUtils;
 import wit.cgd.warbirds.game.Assets;
 import wit.cgd.warbirds.game.objects.AbstractGameObject.State;
 import wit.cgd.warbirds.game.objects.enemies.AbstractEnemy;
+import wit.cgd.warbirds.game.util.AudioManager;
 import wit.cgd.warbirds.game.util.Constants;
 
 public class Boss extends AbstractEnemy{
@@ -38,7 +39,7 @@ public static final String TAG = Player.class.getName();
 	@Override
 	public void update (float deltaTime) {
 		super.update(deltaTime);
-		if(health <= 0) return;
+		if(isDead()) return;
 		shoot();
 		if(level.rng.nextDouble() < 0.01) level.spawnPowerup(position);
 		timeShootDelay -= deltaTime;
@@ -70,6 +71,7 @@ public static final String TAG = Player.class.getName();
 			bullet.setRegion(Assets.instance.enemyBullet.region);
 			level.bullets.add(bullet);
 		}
+		AudioManager.instance.play(Assets.instance.sounds.gun1);
 		timeShootDelay = Constants.ENEMY_SHOOT_DELAY/2;
 	}
 }

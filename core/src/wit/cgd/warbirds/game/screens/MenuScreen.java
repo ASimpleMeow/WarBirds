@@ -17,6 +17,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
+import wit.cgd.warbirds.game.Assets;
 import wit.cgd.warbirds.game.util.AudioManager;
 import wit.cgd.warbirds.game.util.Constants;
 import wit.cgd.warbirds.game.util.GamePreferences;
@@ -44,6 +45,7 @@ public class MenuScreen extends AbstractGameScreen{
 	private Slider          soundSlider;
 	private CheckBox        musicCheckBox;
 	private Slider          musicSlider;
+	private Slider			enemySpawnSlider;
 	
 	
 	public MenuScreen(Game game){
@@ -136,15 +138,18 @@ public class MenuScreen extends AbstractGameScreen{
     }
     
     private void onPlayerClicked(){
+    	AudioManager.instance.play(Assets.instance.sounds.click);
     	GamePreferences.instance.levelNumber = 1;
     	game.setScreen(new GameScreen(game));
     }
     
     private void onContinueClicked(){
+    	AudioManager.instance.play(Assets.instance.sounds.click);
     	game.setScreen(new GameScreen(game));
     }
     
     private void onOptionsClicked(){
+    	AudioManager.instance.play(Assets.instance.sounds.click);
     	startButton.setVisible(false);
     	continueButton.setVisible(false);
     	optionsButton.setVisible(false);
@@ -188,6 +193,12 @@ public class MenuScreen extends AbstractGameScreen{
         optionsWindow.add(musicSlider).prefWidth(Constants.VIEWPORT_GUI_WIDTH/2).colspan(2);
         optionsWindow.row().padBottom(10);
         
+        optionsWindow.add(new Label("Enemy Spawn (Difficulty)", defaultSkin)).colspan(3);
+        optionsWindow.row();
+        enemySpawnSlider = new Slider(1, 5, 1, false, defaultSkin);
+        optionsWindow.add(enemySpawnSlider).prefWidth(Constants.VIEWPORT_GUI_WIDTH/2).colspan(2);
+        optionsWindow.row().padBottom(10);
+        
         // ok and cancel buttons 
         optionsOkButton = new Button(skin,"ok");
         optionsWindow.add(optionsOkButton).width(125).height(50).pad(Constants.BUTTON_PADDING);
@@ -224,12 +235,14 @@ public class MenuScreen extends AbstractGameScreen{
     	GamePreferences.instance.sound = soundCheckBox.isChecked();
     	GamePreferences.instance.musicVolume = musicSlider.getValue();
     	GamePreferences.instance.music = musicCheckBox.isChecked();
+    	GamePreferences.instance.enemySpawnLimit = (int) enemySpawnSlider.getValue();
     	AudioManager.instance.onSettingsUpdated();
     	GamePreferences.instance.save();
     	onCancelClicked();
     }
     
     private void onCancelClicked(){
+    	AudioManager.instance.play(Assets.instance.sounds.click);
     	startButton.setVisible(true);
     	continueButton.setVisible(true);
         optionsButton.setVisible(true);
@@ -241,6 +254,7 @@ public class MenuScreen extends AbstractGameScreen{
     	soundSlider.setValue(GamePreferences.instance.soundVolume);
     	musicCheckBox.setChecked(GamePreferences.instance.music);
     	musicSlider.setValue(GamePreferences.instance.musicVolume);
+    	enemySpawnSlider.setValue(GamePreferences.instance.enemySpawnLimit);
     	disableSlider(soundSlider, soundCheckBox.isChecked());
     	disableSlider(musicSlider, musicCheckBox.isChecked());
     }

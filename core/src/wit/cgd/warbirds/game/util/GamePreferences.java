@@ -11,6 +11,7 @@ public class GamePreferences {
 	public static final GamePreferences	instance	= new GamePreferences();
 	private Preferences					prefs;
 	public int							levelNumber;
+	public int							enemySpawnLimit;
 	
 	public boolean						sound;
 	public boolean						music;
@@ -23,6 +24,7 @@ public class GamePreferences {
 
 	public void load() {
 		levelNumber = prefs.getInteger("levelNumber", 1);
+		enemySpawnLimit = MathUtils.clamp(prefs.getInteger("enemySpawnLimit", 3), 1, 5);
 		sound = prefs.getBoolean("sound", true);
 		music = prefs.getBoolean("music", true);
 		soundVolume = MathUtils.clamp(prefs.getFloat("soundVolume", 1f), 0f, 1f);
@@ -31,6 +33,7 @@ public class GamePreferences {
 
 	public void save() {
 		prefs.putInteger("levelNumber", levelNumber);
+		prefs.putInteger("enemySpawnLimit", enemySpawnLimit);
 		prefs.putBoolean("sound", sound);
     	prefs.putBoolean("music", music);
     	prefs.putFloat("soundVolume", soundVolume);

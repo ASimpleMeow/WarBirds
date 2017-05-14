@@ -79,4 +79,9 @@ public abstract class AbstractGameObject {
 	public void resetLevel(Level level){
 		this.level = level;
 	}
+	
+	public boolean isDead(){
+		return health <= 0;
+	}
+	
 }

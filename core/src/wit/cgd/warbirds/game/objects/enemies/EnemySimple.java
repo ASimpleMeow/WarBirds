@@ -28,7 +28,7 @@ public class EnemySimple extends AbstractEnemy{
 	@Override
 	public void update(float deltaTime){
 		super.update(deltaTime);
-		if(health <= 0) return;
+		if(isDead()) return;
 		super.shoot();
 	}
 	

@@ -45,6 +45,9 @@ public class WorldRenderer implements Disposable {
 		float scale = (float)height/(float)width;
 		camera.viewportHeight = scale * Constants.VIEWPORT_HEIGHT;
 		camera.update();
+		worldController.viewportWidth = camera.viewportWidth;
+		worldController.width = width;
+		worldController.height = height;
 		cameraGUI.viewportHeight = Constants.VIEWPORT_GUI_HEIGHT;
 		cameraGUI.viewportWidth = scale*Constants.VIEWPORT_GUI_HEIGHT;
 		cameraGUI.position.set(cameraGUI.viewportWidth / 2, cameraGUI.viewportHeight / 2, 0);
@@ -99,7 +102,8 @@ public class WorldRenderer implements Disposable {
 					Constants.VIEWPORT_GUI_HEIGHT/3);
 		
 		if(worldController.level.levelEndTimer != Constants.LEVEL_END_DELAY)
-			renderGuiTextBig(batch, "LEVEL COMPLETE", Constants.VIEWPORT_GUI_WIDTH-100, Constants.VIEWPORT_GUI_HEIGHT/3);
+			renderGuiTextBig(batch, (worldController.level.player.isDead())?"        YOU DIED":"LEVEL COMPLETE",
+					Constants.VIEWPORT_GUI_WIDTH-100, Constants.VIEWPORT_GUI_HEIGHT/3);
 			
 		//Render level number in the bottom left corner
 		renderGuiLevelNumber(batch);

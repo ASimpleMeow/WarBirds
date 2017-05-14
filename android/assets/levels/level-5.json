@@ -3,8 +3,8 @@
 	// is here to show how it could be done manually.
 	seed: 40,
 	enemies: [
-		{	name: enemySimple,			limit: 15},
-		{	name: enemyNormal,			limit: 7},
-		{	name: enemyDifficult,		limit: 3}
+		{	name: enemySimple,			limit: 20},
+		{	name: enemyNormal,			limit: 15},
+		{	name: enemyDifficult,		limit: 10}
 	]
 }

@@ -58,10 +58,12 @@ public class Assets implements Disposable, AssetErrorListener {
 
 		// load sounds
 		assetManager.load("sounds/sfx_blast.wav", Sound.class);
+		assetManager.load("sounds/sfx_click.wav", Sound.class);
+		assetManager.load("sounds/sfx_explosion.wav", Sound.class);
 		assetManager.load("sounds/sfx_gun1.wav", Sound.class);
 		assetManager.load("sounds/sfx_gun2.wav", Sound.class);
 		assetManager.load("sounds/sfx_pickup.wav", Sound.class);
-		assetManager.load("sounds/sfx_powerup.wav", Sound.class);
+		assetManager.load("sounds/sfx_warning.wav", Sound.class);
 
 		// load music
 		assetManager.load("music/song_theme.mp3", Music.class);
@@ -112,7 +114,7 @@ public class Assets implements Disposable, AssetErrorListener {
 	}
 
 	@Override
-	public void error(AssetDescriptor asset, Throwable throwable) {
+	public void error(@SuppressWarnings("rawtypes") AssetDescriptor asset, Throwable throwable) {
 		Gdx.app.error(TAG, "Couldn't load asset '" + asset + "'", (Exception) throwable);
 	}
 
@@ -184,17 +186,21 @@ public class Assets implements Disposable, AssetErrorListener {
 
 	public class AssetSounds {
 		public final Sound blast;
+		public final Sound click;
+		public final Sound explosion;
 		public final Sound gun1;
 		public final Sound gun2;
 		public final Sound pickup;
-		public final Sound powerup;
+		public final Sound warning;
 
 		public AssetSounds(AssetManager am) {
 			blast = am.get("sounds/sfx_blast.wav", Sound.class);
+			click = am.get("sounds/sfx_click.wav", Sound.class);
+			explosion = am.get("sounds/sfx_explosion.wav", Sound.class);
 			gun1 = am.get("sounds/sfx_gun1.wav", Sound.class);
 			gun2 = am.get("sounds/sfx_gun2.wav", Sound.class);
 			pickup = am.get("sounds/sfx_pickup.wav", Sound.class);
-			powerup = am.get("sounds/sfx_powerup.wav", Sound.class);
+			warning = am.get("sounds/sfx_warning.wav", Sound.class);
 		}
 	}
 

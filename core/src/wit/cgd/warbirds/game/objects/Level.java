@@ -18,8 +18,10 @@ import wit.cgd.warbirds.game.objects.enemies.AbstractEnemy;
 import wit.cgd.warbirds.game.objects.enemies.EnemyDifficult;
 import wit.cgd.warbirds.game.objects.enemies.EnemyNormal;
 import wit.cgd.warbirds.game.objects.enemies.EnemySimple;
+import wit.cgd.warbirds.game.util.AudioManager;
 import wit.cgd.warbirds.game.util.Constants;
 import wit.cgd.warbirds.game.util.EnemyPoolCollection;
+import wit.cgd.warbirds.game.util.GamePreferences;
 
 public class Level extends AbstractGameObject {
 
@@ -38,6 +40,7 @@ public class Level extends AbstractGameObject {
 	public int					enemySimpleLimit;
 	public int					enemyNormalLimit;
 	public int					enemyDifficultLimit;
+	private int					enemySpawnLimit;
 	
 	private String[] islands = {"islandBig","islandSmall","islandTiny"};
 	private float islandTimer;
@@ -89,6 +92,7 @@ public class Level extends AbstractGameObject {
 	}
 
 	private void init() {
+		AudioManager.instance.play(Assets.instance.music.themeSong);
 		// player
 		player = new Player(this);
 		player.position.set(0, 0);
@@ -105,12 +109,19 @@ public class Level extends AbstractGameObject {
 		levelEndTimer = Constants.LEVEL_END_DELAY;
 		levelBossTimer = Constants.LEVEL_BOSS_DELAY;
 		startBoss = false;
+		enemySpawnLimit = GamePreferences.instance.enemySpawnLimit;
 	}
 	
 	public void loadLevel(int levelNumber){
 		
 		init();
 		this.levelNumber = levelNumber;
+		
+		if (GamePreferences.instance.levelNumber < levelNumber){
+			GamePreferences.instance.levelNumber = levelNumber;
+			GamePreferences.instance.save();
+		}
+		
 		// read and parse level map (form a json file)
 		String map = Gdx.files.internal(String.format("levels/level-%d.json",levelNumber)).readString();
 
@@ -141,7 +152,10 @@ public class Level extends AbstractGameObject {
 
 		player.update(deltaTime);
 		
-		if(enemies.size+enemySimpleLimit+enemyNormalLimit+enemyDifficultLimit == 0) startBoss = true;
+		if(enemies.size+enemySimpleLimit+enemyNormalLimit+enemyDifficultLimit == 0){
+			AudioManager.instance.play(Assets.instance.music.bossSong);
+			startBoss = true;
+		}
 		
 		if(startBoss) levelBossTimer -= deltaTime;
 		
@@ -195,7 +209,7 @@ public class Level extends AbstractGameObject {
 	}
 	
 	private void spawnEnemy(){
-		while(enemies.size < 3){
+		while(enemies.size < enemySpawnLimit){
 			float x = rng.nextInt(((int)Constants.VIEWPORT_WIDTH))*2 - Constants.VIEWPORT_WIDTH - 0.5f;
 			x = MathUtils.clamp(x,-Constants.VIEWPORT_WIDTH/2+1f,Constants.VIEWPORT_WIDTH/2-1f);
 			float y = end -1  + rng.nextInt(2);

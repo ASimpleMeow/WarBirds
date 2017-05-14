@@ -6,6 +6,7 @@ import wit.cgd.warbirds.game.objects.Bullet;
 import wit.cgd.warbirds.game.objects.Level;
 import wit.cgd.warbirds.game.objects.Player;
 import wit.cgd.warbirds.game.objects.AbstractGameObject.State;
+import wit.cgd.warbirds.game.util.AudioManager;
 import wit.cgd.warbirds.game.util.Constants;
 
 import com.badlogic.gdx.Gdx;
@@ -36,12 +37,13 @@ public abstract class AbstractEnemy extends AbstractGameObject implements Poolab
 		updateMotionX();
 		updateMotionY();
 		timeShootDelay -= deltaTime;
-		if(health <= 0){
+		if(isDead()){
 			if(state == State.ACTIVE){
 				state = State.DYING;
 				animation = (enemyType.equals("boss"))? 
 						Assets.instance.explosionLarge.animation : Assets.instance.explosionBig.animation;
 				setAnimation(animation);
+				AudioManager.instance.play(Assets.instance.sounds.explosion);
 			}
 		}
 	}
@@ -63,6 +65,7 @@ public abstract class AbstractEnemy extends AbstractGameObject implements Poolab
 		bullet.setRegion(Assets.instance.enemyBullet.region);
 		level.bullets.add(bullet);
 		timeShootDelay = Constants.ENEMY_SHOOT_DELAY;
+		AudioManager.instance.play(Assets.instance.sounds.gun1);
 	}
 	
 	public void turnTowards(Vector2 obj){

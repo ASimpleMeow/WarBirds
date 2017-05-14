@@ -29,12 +29,14 @@ public class EnemyDifficult extends AbstractEnemy{
 	@Override
 	public void update(float deltaTime){
 		super.update(deltaTime);
-		if(health <= 0) return;
+		if(isDead()) return;
 		if(position.y > level.player.position.y + 4 || position.y >= level.end - 3) 
 			canAttack = true;
 		if(!canAttack) return;
-		super.turnTowards((level.player.position.y > position.y)? null : level.player.position);
-		super.moveTowards((level.player.position.y > position.y)? null : level.player.position);
+		super.turnTowards((level.player.position.y > position.y || level.player.isDead())?
+				null : level.player.position);
+		super.moveTowards((level.player.position.y > position.y || level.player.isDead())?
+				null : level.player.position);
 		super.shoot();
 	}
 	

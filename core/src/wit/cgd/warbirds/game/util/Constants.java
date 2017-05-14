@@ -43,6 +43,7 @@ public class Constants {
 	public static final float	LEVEL_START_DELAY	= 3f;
 	public static final float	LEVEL_BOSS_DELAY	= 5f;
 	public static final float	LEVEL_END_DELAY		= 5f;
+	public static final float	HEALTH_WARNING_DELAY= 1.5f;
 	
 	//Health constants
 	public static final float		PlAYER_HEALTH		= 20f;

@@ -1,6 +1,8 @@
 package wit.cgd.warbirds.game.objects;
 
 import wit.cgd.warbirds.game.Assets;
+import wit.cgd.warbirds.game.objects.AbstractGameObject.State;
+import wit.cgd.warbirds.game.util.AudioManager;
 import wit.cgd.warbirds.game.util.Constants;
 
 import com.badlogic.gdx.graphics.g2d.Animation;
@@ -15,6 +17,7 @@ public class Player extends AbstractGameObject {
 	private Animation<TextureRegion> animation;
 	private TextureRegion region;
 	private float timeShootDelay;
+	private float timeWarningDelay;
 	
 	public boolean doubleBullet;
 	private float doubleBulletTimer;
@@ -38,6 +41,7 @@ public class Player extends AbstractGameObject {
 		// Center image on game object
 		origin.set(dimension.x / 2, dimension.y / 2);
 		timeShootDelay = 0;
+		timeWarningDelay = 0;
 		
 		health = Constants.PlAYER_HEALTH;
 		score = 0;
@@ -59,6 +63,15 @@ public class Player extends AbstractGameObject {
 		position.x = MathUtils.clamp(position.x,-Constants.VIEWPORT_WIDTH/2+0.5f,Constants.VIEWPORT_WIDTH/2-0.5f);
 		position.y = MathUtils.clamp(position.y,level.start+2, level.end-2);
 		
+		if(isDead()){
+			if(state == State.ACTIVE){
+				state = State.DEAD;
+				animation = Assets.instance.explosionLarge.animation;
+				AudioManager.instance.play(Assets.instance.sounds.blast);
+			}
+			return;
+		}
+		
 		if(doubleBullet) doubleBulletTimer -= deltaTime;
 		if(doubleBulletTimer <= 0){
 			doubleBullet = false;
@@ -72,6 +85,11 @@ public class Player extends AbstractGameObject {
 		}
 		
 		if(shield <= 0) shield = 0;
+		
+		if(health <= 5 && shield <= 0) {
+			timeWarningDelay -= deltaTime;
+			soundWarning();
+		}
 		
 		timeShootDelay -= deltaTime;
 	}
@@ -87,7 +105,13 @@ public class Player extends AbstractGameObject {
 		bullet.isSourcePlayer =true;
 		level.bullets.add(bullet);
 		timeShootDelay = (doubleBullet)?Constants.PLAYER_SHOOT_DELAY/2 : Constants.PLAYER_SHOOT_DELAY;
-
+		AudioManager.instance.play(Assets.instance.sounds.gun2);
+	}
+	
+	private void soundWarning() {
+		if(timeWarningDelay > 0) return;
+		AudioManager.instance.play(Assets.instance.sounds.warning);
+		timeWarningDelay = Constants.HEALTH_WARNING_DELAY;
 	}
 	
 	public void render (SpriteBatch batch) {
@@ -106,4 +130,7 @@ public class Player extends AbstractGameObject {
 				false, false);
 	}
 	
+	public boolean canMove(){
+		return !(level.levelStartTimer > 0 || level.levelEndTimer != Constants.LEVEL_END_DELAY);
+	}
 }
